@@ -23,6 +23,8 @@ export interface Project {
   gallery?: string[];
 }
 
+// TODO: add `image` (e.g. "/portfolio/<slug>.jpg") to each project once the file exists in /public.
+// Projects without an image show a numbered placeholder.
 export const projects: Project[] = [
   {
     slug: "visual-identity",
@@ -48,7 +50,6 @@ export const projects: Project[] = [
       "Visual storytelling through cinematic production, editing and motion.",
     year: 2026,
     featured: true,
-    image: "/portfolio/moving-stories.jpg",
     client: "Creative Studio",
     role: "Production & Video Editing",
     brief:
@@ -64,7 +65,6 @@ export const projects: Project[] = [
       "Modern digital experiences designed to connect people, ideas and technology.",
     year: 2026,
     featured: true,
-    image: "/portfolio/digital-experiences.jpg",
     client: "Creative Studio",
     role: "Web Design & Development",
     brief:

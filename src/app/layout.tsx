@@ -16,7 +16,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "Creative Studio",
+  title: "RR Empire",
   description:
     "A creative studio working across design, film, photography, animation and digital technology.",
 };
