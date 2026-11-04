@@ -3,6 +3,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 const navigation = [
   { label: "Work", href: "/portfolio" },
@@ -17,7 +18,7 @@ export default function Navbar() {
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-white/[0.06] bg-black/70 backdrop-blur-xl">
       <nav className="mx-auto flex max-w-[1440px] items-center justify-between px-6 py-4 md:px-10">
-        <a
+        <Link
           href="/"
           aria-label="RR Empire home"
           className="relative z-50 flex shrink-0 items-center"
@@ -30,26 +31,26 @@ export default function Navbar() {
             priority
             className="h-auto w-[88px] md:w-[108px]"
           />
-        </a>
+        </Link>
 
         <div className="hidden items-center gap-8 md:flex">
           {navigation.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               className="text-[11px] uppercase tracking-[0.16em] text-white/65 transition-colors duration-300 hover:text-white"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </div>
 
-        <a
+        <Link
           href="/contact"
           className="hidden border-b border-white/30 pb-1 text-[11px] uppercase tracking-[0.16em] text-white/80 transition-colors hover:border-white hover:text-white md:block"
         >
           Enquire
-        </a>
+        </Link>
 
         <button
           type="button"
@@ -72,7 +73,7 @@ export default function Navbar() {
 
           <div className="flex flex-col gap-7">
             {navigation.map((item, index) => (
-              <a
+              <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setMenuOpen(false)}
@@ -82,17 +83,17 @@ export default function Navbar() {
                   0{index + 1}
                 </span>
                 {item.label}
-              </a>
+              </Link>
             ))}
           </div>
 
-          <a
+          <Link
             href="/contact"
             onClick={() => setMenuOpen(false)}
             className="mt-12 w-fit border-b border-[#b9b6e8]/60 pb-2 text-sm text-[#c9c6ef]"
           >
             Make an enquiry →
-          </a>
+          </Link>
         </div>
       )}
     </header>

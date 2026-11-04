@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-[var(--background)] pt-32">
@@ -171,12 +173,12 @@ export default function ContactPage() {
                 Work
               </p>
 
-              <a
+              <Link
                 href="/portfolio"
                 className="text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent)]"
               >
                 View selected work →
-              </a>
+              </Link>
             </div>
           </div>
         </section>

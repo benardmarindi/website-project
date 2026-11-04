@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const services = [
   {
     number: "01",
@@ -181,7 +183,7 @@ export default function ServicesPage() {
               it <span className="text-[var(--accent)]">happen.</span>
             </h2>
 
-            <a
+            <Link
               href="/contact"
               className="group flex w-fit shrink-0 items-center gap-4 rounded-full bg-[var(--accent)] px-7 py-4 text-sm font-medium text-black transition-transform duration-300 hover:translate-x-1"
             >
@@ -189,7 +191,7 @@ export default function ServicesPage() {
               <span className="transition-transform duration-300 group-hover:translate-x-1">
                 →
               </span>
-            </a>
+            </Link>
           </div>
         </section>
       </div>

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const disciplines = [
   "Design",
   "Film",
@@ -165,12 +167,12 @@ export default function AboutPage() {
                 </h2>
               </div>
 
-              <a
+              <Link
                 href="/portfolio"
                 className="text-sm uppercase tracking-[0.14em] text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent)]"
               >
                 View all work →
-              </a>
+              </Link>
             </div>
           </div>
         </section>

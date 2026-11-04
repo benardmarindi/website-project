@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { projects } from "@/data/portfolio";
 
 const disciplines = ["Design", "Film", "Image", "Motion", "Digital"];
@@ -39,7 +40,7 @@ export default function Home() {
 
         <div className="space-y-20 md:space-y-32">
           {featuredProjects.map((project, index) => (
-            <a
+            <Link
               key={project.slug}
               href={`/portfolio/${project.slug}`}
               className="group block"
@@ -83,12 +84,12 @@ export default function Home() {
                   </span>
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
 
         <div className="mt-16">
-          <a
+          <Link
             href="/portfolio"
             className="group inline-flex items-center gap-4 text-xs uppercase tracking-[0.16em] text-[var(--foreground-muted)] transition-colors hover:text-[var(--foreground)]"
           >
@@ -96,7 +97,7 @@ export default function Home() {
             <span className="transition-transform duration-300 group-hover:translate-x-2">
               →
             </span>
-          </a>
+          </Link>
         </div>
       </section>
 
@@ -146,12 +147,12 @@ export default function Home() {
               </h2>
             </div>
 
-            <a
+            <Link
               href="/contact"
               className="text-sm uppercase tracking-[0.14em] text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent)]"
             >
               Get in touch →
-            </a>
+            </Link>
           </div>
         </div>
       </section>

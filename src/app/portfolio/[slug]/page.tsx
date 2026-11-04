@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { projects } from "@/data/portfolio";
 
@@ -212,7 +213,7 @@ export default async function ProjectPage({
               something <span className="text-[var(--accent)]">great.</span>
             </h2>
 
-            <a
+            <Link
               href="/contact"
               className="group flex w-fit shrink-0 items-center gap-4 rounded-full bg-[var(--accent)] px-7 py-4 text-sm font-medium text-black transition-transform duration-300 hover:translate-x-1"
             >
@@ -220,25 +221,25 @@ export default async function ProjectPage({
               <span className="transition-transform duration-300 group-hover:translate-x-1">
                 →
               </span>
-            </a>
+            </Link>
           </div>
         </section>
 
         {/* Navigation */}
         <div className="mt-20 flex justify-between border-t border-[var(--border)] pt-8">
-          <a
+          <Link
             href="/portfolio"
             className="text-sm uppercase tracking-[0.12em] text-[var(--foreground-muted)] transition-colors hover:text-[var(--foreground)]"
           >
             ← All work
-          </a>
+          </Link>
 
-          <a
+          <Link
             href="/contact"
             className="text-sm uppercase tracking-[0.12em] text-[var(--accent)]"
           >
             Start a project →
-          </a>
+          </Link>
         </div>
       </div>
     </main>

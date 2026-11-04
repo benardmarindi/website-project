@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { projects } from "@/data/portfolio";
 
 const categories = [
@@ -75,7 +76,7 @@ export default function PortfolioPage() {
         {filteredProjects.length > 0 ? (
           <div className="grid gap-12 md:grid-cols-2">
             {filteredProjects.map((project, index) => (
-              <a
+              <Link
                 key={project.slug}
                 href={`/portfolio/${project.slug}`}
                 className={`group block ${
@@ -144,7 +145,7 @@ export default function PortfolioPage() {
                     {project.year}
                   </span>
                 </div>
-              </a>
+              </Link>
             ))}
           </div>
         ) : (

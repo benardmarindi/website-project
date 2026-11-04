@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { projects } from "@/data/portfolio";
 
 export default function SelectedWork() {
@@ -39,7 +40,7 @@ export default function SelectedWork() {
               }`}
             >
               {/* Project visual */}
-              <a
+              <Link
                 href={`/portfolio/${project.slug}`}
                 className={`relative block overflow-hidden bg-[var(--surface)] ${
                   index === 2 ? "aspect-[16/7]" : "aspect-[4/3]"
@@ -88,7 +89,7 @@ export default function SelectedWork() {
                     View project →
                   </span>
                 </div>
-              </a>
+              </Link>
 
               {/* Project information */}
               <div className="flex items-start justify-between border-b border-[var(--border)] py-5">
@@ -112,7 +113,7 @@ export default function SelectedWork() {
 
         {/* View all */}
         <div className="mt-12 flex justify-end">
-          <a
+          <Link
             href="/portfolio"
             className="group flex items-center gap-4 text-sm uppercase tracking-[0.12em]"
           >
@@ -121,7 +122,7 @@ export default function SelectedWork() {
             <span className="transition-transform duration-300 group-hover:translate-x-2">
               →
             </span>
-          </a>
+          </Link>
         </div>
       </div>
     </section>
