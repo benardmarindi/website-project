@@ -1,40 +1,60 @@
-<<<<<<< HEAD
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# RR Empire — Website
 
-## Getting Started
+Portfolio and services website for RR Empire, a creative studio working across design, film, photography, animation, web and system development, social media and video editing.
 
-First, run the development server:
+Built with [Next.js](https://nextjs.org) (App Router), React and Tailwind CSS.
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Other scripts:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build   # production build
+npm run start   # run the production build
+npm run lint    # ESLint
+```
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/
+    page.tsx                  Home
+    portfolio/page.tsx        All work (filterable)
+    portfolio/[slug]/page.tsx Single project page
+    services/page.tsx         Services
+    about/page.tsx            About
+    contact/page.tsx          Contact and enquiry form
+    layout.tsx                Root layout, fonts, metadata
+    globals.css               Theme variables and base styles
+  components/
+    navigation/Navbar.tsx     Site header and mobile menu
+    sections/SelectedWork.tsx Featured work section
+  data/
+    portfolio.ts              Portfolio projects
+public/
+  brand/                      Logos
+  hero/                       Hero photos and video
+  portfolio/                  Project images
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Adding a portfolio project
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Add an entry to `src/data/portfolio.ts`. Put its image in `public/portfolio/` and set `image` to its path (for example `"/portfolio/my-project.jpg"`). A project without an `image` shows a numbered placeholder.
 
-## Deploy on Vercel
+## Status
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Work in progress. Still to build:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-=======
-# website-project
->>>>>>> 7e35571004b98507e40e3dc619dcfd20b2824438
+- Contact form submission (the form currently does not send anything)
+- Payment integration
+- Social media links and connections
+- Real portfolio content and images
+- SEO, analytics and launch setup
