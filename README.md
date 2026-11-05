@@ -36,24 +36,38 @@ src/
     globals.css               Theme variables and base styles
   components/
     navigation/Navbar.tsx     Site header and mobile menu
-    sections/SelectedWork.tsx Featured work section
+    layout/Footer.tsx         Site footer
+    sections/WorkGrid.tsx     Filterable grid of projects (Work page)
+    sections/ContactCta.tsx   "Have a project in mind?" band
+    ui/ProjectCarousel.tsx    Swipeable, self-advancing photo carousel
   data/
     portfolio.ts              Portfolio projects
+    site.ts                   Email address and social links
 public/
   brand/                      Logos
-  hero/                       Hero photos and video
-  portfolio/                  Project images
+  hero/                       Original photos and video (large)
+  portfolio/                  Web-sized project images
 ```
 
 ## Adding a portfolio project
 
-Add an entry to `src/data/portfolio.ts`. Put its image in `public/portfolio/` and set `image` to its path (for example `"/portfolio/my-project.jpg"`). A project without an `image` shows a numbered placeholder.
+Add an entry to `src/data/portfolio.ts`. Put the project's photos in `public/portfolio/` (about 2000px wide is plenty) and list them in `images`. Two or more photos make a carousel that swipes and changes by itself.
+
+Choose how the photos change with `transition`:
+
+- `"slide"` pushes the next photo in from the side
+- `"fade"` crossfades while slowly zooming
+- `"wipe"` reveals the next photo with a wipe
+
+## Your details
+
+`src/data/site.ts` holds your email address and social media links. Fill them in and they update everywhere. Social links with no address are hidden.
 
 ## Status
 
 Work in progress. Still to build:
 
-- Contact form submission (the form currently does not send anything)
+- Contact form that sends straight to your inbox (it currently opens the visitor's email app)
 - Payment integration
 - Social media links and connections
 - Real portfolio content and images

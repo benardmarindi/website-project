@@ -1,4 +1,12 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import ContactCta from "@/components/sections/ContactCta";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "RR Empire is a multidisciplinary creative studio in Kenya working across design, image, motion and technology.",
+};
 
 const disciplines = [
   "Design",
@@ -10,173 +18,78 @@ const disciplines = [
 ];
 
 const details = [
-  {
-    label: "Based",
-    value: "Kenya",
-  },
-  {
-    label: "Practice",
-    value: "Independent Creative Studio",
-  },
-  {
-    label: "Working across",
-    value: "Design / Image / Motion / Digital",
-  },
-  {
-    label: "Selected work",
-    value: "2024 — 2026",
-  },
+  { label: "Based in", value: "Kenya" },
+  { label: "Practice", value: "Independent creative studio" },
+  { label: "Working across", value: "Design, image, motion and digital" },
+  { label: "Selected work", value: "2024 to 2026" },
 ];
 
 export default function AboutPage() {
   return (
-    <main className="min-h-screen bg-[var(--background)] pt-32">
-      <div className="container pb-32 md:pb-48">
-        {/* Intro */}
-        <header className="flex min-h-[70vh] flex-col justify-end pb-20 md:pb-28">
-          <p className="mb-6 text-xs uppercase tracking-[0.18em] text-[var(--accent)]">
-            About
-          </p>
-
-          <h1 className="max-w-6xl font-[var(--font-space-grotesk)] text-6xl font-medium leading-[0.86] tracking-[-0.07em] md:text-[9rem]">
-            A studio
-            <br />
-            <span className="text-[var(--foreground-muted)]">
-              without borders.
-            </span>
+    <>
+      <div className="container pb-28 pt-36 md:pb-36 md:pt-44">
+        <header className="mb-20 md:mb-28">
+          <h1 className="max-w-[12em] text-5xl leading-[1.04] md:text-7xl">
+            A studio without borders.
           </h1>
+
+          <p className="mt-8 max-w-2xl text-2xl leading-[1.35] tracking-tight md:text-[32px]">
+            A multidisciplinary practice working between design, image, motion
+            and technology.
+          </p>
         </header>
 
-        {/* Statement */}
-        <section className="border-y border-[var(--border)] py-16 md:py-24">
-          <div className="grid gap-12 md:grid-cols-[1fr_2fr]">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--foreground-subtle)]">
-              The studio
+        <section className="grid gap-10 border-t border-[var(--border)] pt-14 md:grid-cols-[1fr_2fr]">
+          <h2 className="text-2xl text-[var(--foreground-muted)]">
+            How we work
+          </h2>
+
+          <div className="max-w-2xl space-y-6 text-xl leading-relaxed text-[var(--foreground-muted)]">
+            <p>
+              We move between disciplines depending on what the work
+              requires. A visual identity might become a campaign. A
+              photograph might become a film. A digital experience might begin
+              with a piece of graphic design.
             </p>
-
-            <div>
-              <p className="max-w-4xl font-[var(--font-space-grotesk)] text-3xl font-medium leading-tight tracking-[-0.04em] md:text-5xl">
-                A multidisciplinary practice working between design, image,
-                motion and technology.
-              </p>
-
-              <p className="mt-10 max-w-2xl text-base leading-8 text-[var(--foreground-muted)]">
-                We move between disciplines depending on what the work
-                requires. A visual identity might become a campaign. A
-                photograph might become a film. A digital experience might
-                begin with a piece of graphic design.
-              </p>
-            </div>
+            <p>
+              We believe the strongest work does not need to explain itself.
+              It needs clarity, intention and enough room to speak.
+            </p>
           </div>
         </section>
 
-        {/* Studio Details */}
-        <section className="mt-24 md:mt-32">
-          <div className="grid border-t border-[var(--border)] md:grid-cols-2">
-            {details.map((detail) => (
-              <div
-                key={detail.label}
-                className="border-b border-[var(--border)] py-7 md:px-6 md:py-9"
-              >
-                <p className="mb-3 text-xs uppercase tracking-[0.16em] text-[var(--foreground-subtle)]">
-                  {detail.label}
-                </p>
+        <dl className="mt-20 grid gap-x-10 gap-y-10 border-t border-[var(--border)] pt-14 sm:grid-cols-2 md:grid-cols-4">
+          {details.map((detail) => (
+            <div key={detail.label}>
+              <dt className="text-base text-[var(--foreground-subtle)]">
+                {detail.label}
+              </dt>
+              <dd className="mt-1 text-xl">{detail.value}</dd>
+            </div>
+          ))}
+        </dl>
 
-                <p className="font-[var(--font-space-grotesk)] text-xl tracking-[-0.02em] md:text-2xl">
-                  {detail.value}
-                </p>
-              </div>
+        <section className="mt-20 border-t border-[var(--border)] pt-14">
+          <h2 className="text-2xl text-[var(--foreground-muted)]">
+            What we do
+          </h2>
+
+          <ul className="mt-8 flex flex-wrap gap-x-10 gap-y-3 text-4xl tracking-tight md:text-6xl">
+            {disciplines.map((discipline) => (
+              <li key={discipline}>{discipline}</li>
             ))}
-          </div>
-        </section>
+          </ul>
 
-        {/* Disciplines */}
-        <section className="mt-24 md:mt-40">
-          <div className="grid gap-10 md:grid-cols-[1fr_2fr]">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--foreground-subtle)]">
-              Disciplines
-            </p>
-
-            <div className="border-t border-[var(--border)]">
-              {disciplines.map((discipline, index) => (
-                <div
-                  key={discipline}
-                  className="group flex items-center justify-between border-b border-[var(--border)] py-6"
-                >
-                  <div className="flex items-center gap-5">
-                    <span className="text-xs text-[var(--foreground-subtle)]">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-
-                    <span className="font-[var(--font-space-grotesk)] text-2xl tracking-[-0.03em] transition-colors duration-300 group-hover:text-[var(--accent)] md:text-3xl">
-                      {discipline}
-                    </span>
-                  </div>
-
-                  <span className="text-[var(--foreground-subtle)] transition-transform duration-300 group-hover:translate-x-2 group-hover:text-[var(--accent)]">
-                    →
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Philosophy */}
-        <section className="mt-24 md:mt-40">
-          <div className="border-t border-[var(--border)] pt-8">
-            <div className="grid gap-12 md:grid-cols-[1fr_2fr]">
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--foreground-subtle)]">
-                Approach
-              </p>
-
-              <div>
-                <h2 className="max-w-4xl font-[var(--font-space-grotesk)] text-4xl font-medium leading-[0.95] tracking-[-0.05em] md:text-6xl">
-                  Less noise.
-                  <br />
-                  <span className="text-[var(--foreground-muted)]">
-                    Better work.
-                  </span>
-                </h2>
-
-                <p className="mt-8 max-w-2xl text-base leading-8 text-[var(--foreground-muted)]">
-                  We believe the strongest work does not need to explain
-                  itself. It needs clarity, intention and enough room to
-                  speak.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Work Link */}
-        <section className="mt-32 md:mt-48">
-          <div className="border-t border-[var(--border)] pt-8">
-            <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
-              <div>
-                <p className="mb-6 text-xs uppercase tracking-[0.18em] text-[var(--foreground-subtle)]">
-                  The work
-                </p>
-
-                <h2 className="font-[var(--font-space-grotesk)] text-5xl font-medium leading-[0.9] tracking-[-0.06em] md:text-7xl">
-                  See it
-                  <br />
-                  <span className="text-[var(--foreground-muted)]">
-                    for yourself.
-                  </span>
-                </h2>
-              </div>
-
-              <Link
-                href="/portfolio"
-                className="text-sm uppercase tracking-[0.14em] text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent)]"
-              >
-                View all work →
-              </Link>
-            </div>
-          </div>
+          <Link
+            href="/services"
+            className="mt-10 inline-block border-b-[1.5px] border-[var(--accent)] pb-0.5 text-lg font-semibold text-[var(--accent)]"
+          >
+            See our services
+          </Link>
         </section>
       </div>
-    </main>
+
+      <ContactCta />
+    </>
   );
 }
