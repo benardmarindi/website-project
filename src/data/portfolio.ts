@@ -8,6 +8,14 @@ export type ProjectCategory =
   | "Social Media"
   | "Video Editing";
 
+// How a project's photos change from one to the next.
+export type CarouselTransition = "slide" | "fade" | "wipe";
+
+export interface ProjectImage {
+  src: string;
+  alt: string;
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -15,61 +23,82 @@ export interface Project {
   description: string;
   year: number;
   featured: boolean;
-  image?: string;
+  /** Photos shown in the project's carousel, in order. */
+  images: ProjectImage[];
+  /** Animation used when the carousel changes photo. */
+  transition: CarouselTransition;
   client?: string;
   role?: string;
   brief?: string;
   outcome?: string;
-  gallery?: string[];
 }
 
-// TODO: add `image` (e.g. "/portfolio/<slug>.jpg") to each project once the file exists in /public.
-// Projects without an image show a numbered placeholder.
+// TODO: these use sample photos. Put each project's own photos in /public/portfolio
+// and list them in `images`. Any number of photos works (2 or more makes a carousel).
 export const projects: Project[] = [
   {
-    slug: "visual-identity",
-    title: "Visual Identity",
+    slug: "race-day-photography",
+    title: "Race day photography",
+    category: "Photography",
+    description: "Action and trail photography from race day.",
+    year: 2026,
+    featured: true,
+    transition: "slide",
+    images: [
+      {
+        src: "/portfolio/rider-mud.jpg",
+        alt: "A rider kicking up mud on a dirt track",
+      },
+      {
+        src: "/portfolio/trail-bridge.jpg",
+        alt: "A rough wooden bridge over a muddy trail",
+      },
+      {
+        src: "/portfolio/visual-identity.jpg",
+        alt: "A quiet dirt lane lined with green hedges",
+      },
+    ],
+  },
+  {
+    slug: "moto-4-campaign",
+    title: "Moto 4 campaign",
     category: "Graphic Design",
-    description:
-      "Visual communication built around a clear identity, strong composition and memorable design.",
+    description: "Event poster and campaign visuals for a motocross race.",
     year: 2026,
     featured: true,
-    image: "/portfolio/visual-identity.jpg",
-    client: "Creative Studio",
-    role: "Art Direction & Graphic Design",
-    brief:
-      "A visual identity project focused on creating a distinctive and consistent visual language.",
-    outcome:
-      "A flexible visual system designed to work across digital and physical communication.",
+    transition: "fade",
+    images: [
+      {
+        src: "/portfolio/moto4-poster.jpg",
+        alt: "Moto 4 event poster with two riders",
+      },
+      {
+        src: "/portfolio/rider-mud.jpg",
+        alt: "A rider kicking up mud on a dirt track",
+      },
+      {
+        src: "/portfolio/trail-bridge.jpg",
+        alt: "A rough wooden bridge over a muddy trail",
+      },
+    ],
   },
   {
-    slug: "moving-stories",
-    title: "Moving Stories",
-    category: "Videography",
-    description:
-      "Visual storytelling through cinematic production, editing and motion.",
+    slug: "pet-portraits",
+    title: "Pet portraits",
+    category: "Photography",
+    description: "Natural-light portraits of dogs and cats.",
     year: 2026,
     featured: true,
-    client: "Creative Studio",
-    role: "Production & Video Editing",
-    brief:
-      "A visual storytelling project built around movement, atmosphere and strong narrative.",
-    outcome:
-      "A cinematic visual piece designed for digital platforms and social media.",
-  },
-  {
-    slug: "digital-experiences",
-    title: "Digital Experiences",
-    category: "Web Development",
-    description:
-      "Modern digital experiences designed to connect people, ideas and technology.",
-    year: 2026,
-    featured: true,
-    client: "Creative Studio",
-    role: "Web Design & Development",
-    brief:
-      "A digital experience combining visual design, interaction and modern web technology.",
-    outcome:
-      "A responsive digital experience designed around clarity, usability and visual impact.",
+    transition: "wipe",
+    images: [
+      {
+        src: "/portfolio/dog-moss.jpg",
+        alt: "A brown and white dog resting on mossy ground",
+      },
+      {
+        src: "/portfolio/cat-up.jpg",
+        alt: "A fluffy white cat looking up",
+      },
+    ],
   },
 ];
