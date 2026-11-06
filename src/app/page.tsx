@@ -1,161 +1,110 @@
-import Image from "next/image";
 import Link from "next/link";
 import { projects } from "@/data/portfolio";
-
-const disciplines = ["Design", "Film", "Image", "Motion", "Digital"];
+import { heroFallback, heroMedia } from "@/data/hero";
+import HeroBackdrop from "@/components/ui/HeroBackdrop";
+import ProjectCarousel from "@/components/ui/ProjectCarousel";
+import ContactCta from "@/components/sections/ContactCta";
 
 export default function Home() {
-  const featuredProjects = projects.filter((project) => project.featured);
+  const featured = projects.filter((project) => project.featured);
+  // With an odd number of projects the first one gets a full-width row.
+  const firstIsWide = featured.length % 2 === 1;
 
   return (
-    <main className="bg-[var(--background)]">
-      {/* Intro */}
-      <section className="container flex min-h-[85vh] flex-col justify-end pb-16 pt-40 md:pb-20">
-        <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between">
-          <h1 className="max-w-5xl font-[var(--font-space-grotesk)] text-6xl font-medium leading-[0.86] tracking-[-0.07em] md:text-[9rem]">
-            Creative
-            <br />
-            <span className="text-[var(--foreground-muted)]">work.</span>
+    <>
+      {/* Welcome */}
+      <section className="relative flex min-h-[88svh] flex-col justify-end overflow-hidden text-white">
+        <HeroBackdrop
+          media={heroMedia.length > 0 ? heroMedia : [heroFallback]}
+        />
+        <div
+          aria-hidden="true"
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(180deg, rgba(21,18,16,0.6) 0%, rgba(21,18,16,0.05) 35%, rgba(21,18,16,0.95) 100%)",
+          }}
+        />
+
+        <div className="container relative pb-14 pt-40 md:pb-20">
+          <h1 className="max-w-[12em] text-5xl leading-[1.02] md:text-7xl lg:text-[5.5rem]">
+            Welcome. Come and see what we&apos;ve been making.
           </h1>
 
-          <div className="max-w-xs pb-2">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--foreground-subtle)]">
-              Design / Film / Image / Motion / Digital
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Selected Work */}
-      <section className="container pb-32 md:pb-48">
-        <div className="mb-10 flex items-center justify-between border-t border-[var(--border)] pt-5">
-          <p className="text-xs uppercase tracking-[0.18em] text-[var(--accent)]">
-            Selected work
-          </p>
-
-          <p className="text-xs text-[var(--foreground-subtle)]">
-            2024 — 2026
-          </p>
-        </div>
-
-        <div className="space-y-20 md:space-y-32">
-          {featuredProjects.map((project, index) => (
-            <Link
-              key={project.slug}
-              href={`/portfolio/${project.slug}`}
-              className="group block"
-            >
-              <div className="relative aspect-[16/9] overflow-hidden bg-[var(--surface)]">
-                {project.image ? (
-                  <Image
-                    src={project.image}
-                    alt={project.title}
-                    fill
-                    sizes="100vw"
-                    className="object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.025]"
-                  />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="font-[var(--font-space-grotesk)] text-[20vw] font-medium tracking-[-0.08em] text-white/[0.035]">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                  </div>
-                )}
-              </div>
-
-              <div className="mt-5 flex flex-col gap-3 border-b border-[var(--border)] pb-5 md:flex-row md:items-start md:justify-between">
-                <div>
-                  <h2 className="font-[var(--font-space-grotesk)] text-2xl font-medium tracking-[-0.04em] md:text-3xl">
-                    {project.title}
-                  </h2>
-
-                  <p className="mt-1 text-sm text-[var(--foreground-muted)]">
-                    {project.category}
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-6">
-                  <span className="text-xs text-[var(--foreground-subtle)]">
-                    {project.year}
-                  </span>
-
-                  <span className="text-sm text-[var(--foreground-subtle)] transition-colors group-hover:text-[var(--accent)]">
-                    View →
-                  </span>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        <div className="mt-16">
           <Link
             href="/portfolio"
-            className="group inline-flex items-center gap-4 text-xs uppercase tracking-[0.16em] text-[var(--foreground-muted)] transition-colors hover:text-[var(--foreground)]"
+            className="mt-9 inline-block rounded-full bg-[var(--accent)] px-7 py-4 text-lg font-semibold text-[#151210] transition-colors hover:bg-[var(--accent-dark)]"
           >
-            All work
-            <span className="transition-transform duration-300 group-hover:translate-x-2">
-              →
-            </span>
+            Browse the work
           </Link>
         </div>
       </section>
 
-      {/* Disciplines */}
-      <section className="border-t border-[var(--border)]">
-        <div className="container py-20 md:py-28">
-          <div className="grid gap-10 md:grid-cols-[1fr_2fr]">
-            <p className="text-xs uppercase tracking-[0.18em] text-[var(--foreground-subtle)]">
-              Disciplines
-            </p>
+      {/* Intro */}
+      <section className="container flex flex-wrap items-start gap-x-12 gap-y-8 py-24 md:py-32">
+        <p className="min-w-0 max-w-[22em] flex-1 basis-[420px] text-3xl leading-[1.25] font-normal tracking-tight md:text-[34px]">
+          RR Empire is a creative studio in Kenya. We take on design, film,
+          photography, animation and web projects, from a single poster to a
+          whole website.
+        </p>
 
-            <div className="grid grid-cols-2 border-t border-[var(--border)] md:grid-cols-3">
-              {disciplines.map((discipline, index) => (
-                <div
-                  key={discipline}
-                  className="border-b border-[var(--border)] py-5 pr-5"
-                >
-                  <span className="mr-4 text-xs text-[var(--foreground-subtle)]">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-
-                  <span className="font-[var(--font-space-grotesk)] text-xl md:text-2xl">
-                    {discipline}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <Link
+          href="/services"
+          className="border-b-[1.5px] border-[var(--accent)] pb-0.5 text-lg font-semibold text-[var(--accent)]"
+        >
+          What we do
+        </Link>
       </section>
 
-      {/* Quiet Contact */}
-      <section className="container py-32 md:py-48">
-        <div className="border-t border-[var(--border)] pt-8">
-          <div className="flex flex-col justify-between gap-12 md:flex-row md:items-end">
-            <div>
-              <p className="mb-6 text-xs uppercase tracking-[0.18em] text-[var(--foreground-subtle)]">
-                Contact
-              </p>
+      {/* Work */}
+      <section className="container pb-28 md:pb-36">
+        <div className="grid gap-x-10 gap-y-16 md:grid-cols-2 md:gap-y-20">
+          {featured.map((project, index) => {
+            const wide = firstIsWide && index === 0;
 
-              <h2 className="font-[var(--font-space-grotesk)] text-5xl font-medium leading-[0.9] tracking-[-0.06em] md:text-8xl">
-                Start a
-                <br />
-                <span className="text-[var(--foreground-muted)]">
-                  conversation.
-                </span>
-              </h2>
-            </div>
-
-            <Link
-              href="/contact"
-              className="text-sm uppercase tracking-[0.14em] text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent)]"
-            >
-              Get in touch →
-            </Link>
-          </div>
+            return (
+              <div key={project.slug} className={wide ? "md:col-span-2" : ""}>
+                <ProjectCarousel
+                  media={project.media}
+                  transition={project.transition}
+                  label={project.title}
+                  aspectClass={
+                    wide ? "aspect-[4/3] md:aspect-[2/1]" : "aspect-square"
+                  }
+                  sizes={
+                    wide
+                      ? "(min-width: 1400px) 1360px, 100vw"
+                      : "(min-width: 768px) 50vw, 100vw"
+                  }
+                  interval={4500 + index * 1000}
+                  caption={
+                    <>
+                      <Link
+                        href={`/portfolio/${project.slug}`}
+                        className="text-2xl font-medium tracking-tight transition-colors hover:text-[var(--accent)] md:text-[28px]"
+                      >
+                        {project.title}
+                      </Link>
+                      <p className="text-base text-[var(--foreground-muted)]">
+                        {project.category}
+                      </p>
+                    </>
+                  }
+                />
+              </div>
+            );
+          })}
         </div>
+
+        <Link
+          href="/portfolio"
+          className="mt-16 inline-block border-b-[1.5px] border-[var(--accent)] pb-0.5 text-lg font-semibold text-[var(--accent)]"
+        >
+          See all work
+        </Link>
       </section>
-    </main>
+
+      <ContactCta />
+    </>
   );
 }
