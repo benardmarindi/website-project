@@ -1,6 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import { projects } from "@/data/portfolio";
+import { heroFallback, heroMedia } from "@/data/hero";
+import HeroBackdrop from "@/components/ui/HeroBackdrop";
 import ProjectCarousel from "@/components/ui/ProjectCarousel";
 import ContactCta from "@/components/sections/ContactCta";
 
@@ -13,13 +14,8 @@ export default function Home() {
     <>
       {/* Welcome */}
       <section className="relative flex min-h-[88svh] flex-col justify-end overflow-hidden text-white">
-        <Image
-          src="/portfolio/trail-bridge.jpg"
-          alt="A rough wooden bridge over a muddy trail"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover"
+        <HeroBackdrop
+          media={heroMedia.length > 0 ? heroMedia : [heroFallback]}
         />
         <div
           aria-hidden="true"
