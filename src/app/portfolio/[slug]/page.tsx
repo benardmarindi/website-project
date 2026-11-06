@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { projects } from "@/data/portfolio";
+import { filmEmbedUrl, projects } from "@/data/portfolio";
 import ProjectCarousel from "@/components/ui/ProjectCarousel";
 import ContactCta from "@/components/sections/ContactCta";
 
@@ -70,7 +70,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
 
         <div className="mt-14 md:mt-20">
           <ProjectCarousel
-            images={project.images}
+            media={project.media}
             transition={project.transition}
             label={project.title}
             aspectClass="aspect-[4/3] md:aspect-[16/9]"
@@ -78,6 +78,22 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
             priority
           />
         </div>
+
+        {project.film && (
+          <section className="mt-20">
+            <h2 className="mb-8 text-3xl md:text-4xl">Watch the film</h2>
+            <div className="aspect-video overflow-hidden rounded-lg bg-[var(--surface)]">
+              <iframe
+                src={filmEmbedUrl(project.film)}
+                title={project.film.title}
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                allowFullScreen
+                className="h-full w-full border-0"
+              />
+            </div>
+          </section>
+        )}
 
         <dl className="mt-14 grid grid-cols-2 gap-x-8 gap-y-8 border-b border-[var(--border)] pb-14 md:grid-cols-4">
           {details.map((detail) => (

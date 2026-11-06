@@ -3,10 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent, ReactNode } from "react";
 import Image from "next/image";
-import type { CarouselTransition, ProjectImage } from "@/data/portfolio";
+import type { CarouselTransition, ProjectMedia } from "@/data/portfolio";
 
 interface ProjectCarouselProps {
-  images: ProjectImage[];
+  media: ProjectMedia[];
   transition: CarouselTransition;
   /** Names the carousel for screen readers, e.g. the project title. */
   label: string;
@@ -14,18 +14,24 @@ interface ProjectCarouselProps {
   aspectClass: string;
   /** Image `sizes` attribute so the browser downloads the right width. */
   sizes: string;
-  /** Left side of the row under the photos (usually the project title). */
+  /** Left side of the row under the slides (usually the project title). */
   caption?: ReactNode;
-  /** Milliseconds between automatic changes. */
+  /** Milliseconds each photo stays on screen. Clips stay until they finish. */
   interval?: number;
   priority?: boolean;
 }
 
 const ACTIVE = "#e2b07a";
 const SWIPE_DISTANCE = 40;
+// Safety net: if a clip never reports that it has finished (for example the
+// browser blocked autoplay), move on after this long.
+const VIDEO_FALLBACK = 15000;
+
+const prefersReducedMotion = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 // Each transition describes where a slide sits depending on whether it is the
-// current photo, the one just left, or one of the others waiting its turn.
+// current one, the one just left, or one of the others waiting its turn.
 function slideStyle(
   mode: CarouselTransition,
   slide: number,
@@ -76,7 +82,7 @@ function slideStyle(
 }
 
 export default function ProjectCarousel({
-  images,
+  media,
   transition,
   label,
   aspectClass,
@@ -85,10 +91,13 @@ export default function ProjectCarousel({
   interval = 5000,
   priority = false,
 }: ProjectCarouselProps) {
-  const total = images.length;
+  const total = media.length;
   const [position, setPosition] = useState({ current: 0, previous: 0 });
   const [paused, setPaused] = useState(false);
+  const [visible, setVisible] = useState(true);
   const swipeStart = useRef<number | null>(null);
+  const frameRef = useRef<HTMLDivElement | null>(null);
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
 
   const step = useCallback(
     (direction: 1 | -1) => {
@@ -100,15 +109,68 @@ export default function ProjectCarousel({
     [total],
   );
 
-  // Change photo by itself, unless the person is looking or interacting, or has
-  // asked their device for reduced motion.
+  // Know whether the carousel is on screen, so nothing plays or moves on
+  // while it is scrolled out of view.
   useEffect(() => {
-    if (total < 2 || paused) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const frame = frameRef.current;
+    if (!frame || typeof IntersectionObserver === "undefined") return;
 
-    const timer = window.setInterval(() => step(1), interval);
-    return () => window.clearInterval(timer);
-  }, [total, paused, interval, step]);
+    const observer = new IntersectionObserver(
+      ([entry]) => setVisible(entry.isIntersecting),
+      { threshold: 0.25 },
+    );
+    observer.observe(frame);
+    return () => observer.disconnect();
+  }, []);
+
+  // Move on by itself: after a set time for photos, and a few seconds after a
+  // clip ends for clips. Stops while the person is hovering or touching, when
+  // the carousel is off screen, or if their device asks for reduced motion.
+  useEffect(() => {
+    if (total < 2 || paused || !visible || prefersReducedMotion()) return;
+
+    const isClip = media[position.current].type === "video";
+    const timer = window.setTimeout(
+      () => step(1),
+      isClip ? VIDEO_FALLBACK : interval,
+    );
+    return () => window.clearTimeout(timer);
+  }, [total, paused, visible, position, media, interval, step]);
+
+  // Play the clip that is showing, pause and rewind the others.
+  useEffect(() => {
+    const reduce = prefersReducedMotion();
+
+    videoRefs.current.forEach((video, index) => {
+      if (!video) return;
+
+      if (index === position.current && visible && !reduce) {
+        video.play().catch(() => {
+          // Autoplay was blocked: the still poster stays up instead.
+        });
+      } else {
+        video.pause();
+        if (index !== position.current) video.currentTime = 0;
+      }
+    });
+  }, [position, visible]);
+
+  function handleClipEnded(index: number) {
+    if (index !== position.current || total < 2) return;
+
+    const clip = videoRefs.current[index];
+    if (paused && clip) {
+      // Someone is looking at it: replay instead of moving on.
+      clip.currentTime = 0;
+      clip.play().catch(() => {});
+      return;
+    }
+    step(1);
+  }
+
+  function handleClipError(index: number) {
+    if (index === position.current && total > 1) step(1);
+  }
 
   function handlePointerDown(event: PointerEvent<HTMLDivElement>) {
     swipeStart.current = event.clientX;
@@ -141,6 +203,7 @@ export default function ProjectCarousel({
       onBlur={() => setPaused(false)}
     >
       <div
+        ref={frameRef}
         role="group"
         aria-roledescription="carousel"
         aria-label={label}
@@ -149,9 +212,9 @@ export default function ProjectCarousel({
         onPointerCancel={handlePointerCancel}
         className={`relative touch-pan-y select-none overflow-hidden rounded-lg bg-[var(--surface)] ${aspectClass}`}
       >
-        {images.map((image, index) => (
+        {media.map((item, index) => (
           <div
-            key={image.src}
+            key={`${item.src}-${index}`}
             aria-hidden={index !== position.current}
             className="carousel-slide absolute inset-0"
             style={slideStyle(
@@ -162,16 +225,35 @@ export default function ProjectCarousel({
               total,
             )}
           >
-            <Image
-              src={image.src}
-              alt={image.alt}
-              fill
-              sizes={sizes}
-              priority={priority && index === 0}
-              loading={priority && index === 0 ? undefined : "eager"}
-              draggable={false}
-              className="object-cover"
-            />
+            {item.type === "image" ? (
+              <Image
+                src={item.src}
+                alt={item.alt}
+                fill
+                sizes={sizes}
+                priority={priority && index === 0}
+                loading={priority && index === 0 ? undefined : "eager"}
+                draggable={false}
+                className="object-cover"
+              />
+            ) : (
+              <video
+                ref={(element) => {
+                  videoRefs.current[index] = element;
+                }}
+                src={item.src}
+                poster={item.poster}
+                aria-label={item.alt}
+                muted
+                playsInline
+                loop={total === 1}
+                preload={index === 0 ? "auto" : "metadata"}
+                draggable={false}
+                onEnded={() => handleClipEnded(index)}
+                onError={() => handleClipError(index)}
+                className="h-full w-full object-cover"
+              />
+            )}
           </div>
         ))}
 
@@ -180,9 +262,9 @@ export default function ProjectCarousel({
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-3.5 top-3.5 z-10 flex gap-1.5"
           >
-            {images.map((image, index) => (
+            {media.map((item, index) => (
               <span
-                key={image.src}
+                key={`${item.src}-${index}`}
                 className="h-[3px] flex-1 rounded-full transition-colors duration-500"
                 style={{
                   backgroundColor:
@@ -209,7 +291,7 @@ export default function ProjectCarousel({
               <button
                 type="button"
                 onClick={() => step(-1)}
-                aria-label={`Previous photo in ${label}`}
+                aria-label={`Previous slide in ${label}`}
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border-strong)] text-[var(--foreground)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
               >
                 <svg
@@ -230,7 +312,7 @@ export default function ProjectCarousel({
               <button
                 type="button"
                 onClick={() => step(1)}
-                aria-label={`Next photo in ${label}`}
+                aria-label={`Next slide in ${label}`}
                 className="flex h-11 w-11 items-center justify-center rounded-full border border-[var(--border-strong)] text-[var(--foreground)] transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)]"
               >
                 <svg

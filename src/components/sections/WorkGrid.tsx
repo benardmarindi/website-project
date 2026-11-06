@@ -60,7 +60,7 @@ export default function WorkGrid() {
                 className={wide ? "md:col-span-2" : ""}
               >
                 <ProjectCarousel
-                  images={project.images}
+                  media={project.media}
                   transition={project.transition}
                   label={project.title}
                   aspectClass={
