@@ -82,3 +82,16 @@ Work in progress. Still to build:
 - Social media links and connections
 - Real portfolio content and images
 - SEO, analytics and launch setup
+
+## Project pages
+
+Every project has its own page (`/portfolio/<slug>`). A simple project (a poster, say) needs only the basics in `portfolio.ts` and its page shows the carousel and the details.
+
+For a fuller case study, add a `cover` (one strong opening picture or clip) and a list of `sections`. A section appears only if you include it, in the order you write it:
+
+- `overview`, `brief`, `approach`, `outcome`: a heading and your text (`approach` and `outcome` can also carry `media`)
+- `gallery`: the actual work, with an optional `title` and `layout: "full"` or `"two-up"`
+
+Related work is chosen automatically from the same discipline. `size: "large"` or `"small"` on a project sets its tile on the Work page.
+
+The six disciplines (the project categories) are in `src/data/disciplines.ts`.

@@ -1,15 +1,5 @@
-export type ProjectCategory =
-  | "Graphic Design"
-  | "Videography"
-  | "Photography"
-  | "Animation"
-  | "Web Development"
-  | "System Development"
-  | "Social Media"
-  | "Video Editing"
-  | "3D Design"
-
-  ;
+import type { ProjectCategory } from "./disciplines";
+export type { ProjectCategory };
 
 // How a project's photos and clips change from one to the next.
 export type CarouselTransition = "slide" | "fade" | "wipe";
@@ -36,6 +26,20 @@ export function filmEmbedUrl(film: ProjectFilm): string {
     : `https://player.vimeo.com/video/${film.id}`;
 }
 
+// One part of a project's own page. Include only the sections a project
+// needs, in the order you want them to appear.
+export type ProjectSection =
+  | { type: "overview"; text: string }
+  | { type: "brief"; text: string }
+  | { type: "approach"; text: string; media?: ProjectMedia[] }
+  | {
+      type: "gallery";
+      title?: string; // for example "Process" or "Final pieces"
+      layout?: "full" | "two-up"; // one picture per row, or two side by side
+      media: ProjectMedia[];
+    }
+  | { type: "outcome"; text: string; media?: ProjectMedia[] };
+
 export interface Project {
   slug: string;
   title: string;
@@ -53,6 +57,12 @@ export interface Project {
   role?: string;
   brief?: string;
   outcome?: string;
+  /** Size of the project's tile on the Work page: "large" is full width, "small" is half. Leave out to let the page choose. */
+  size?: "large" | "small";
+  /** The strong opening picture or clip on the project's page. Used with `sections`; falls back to the first item in `media`. */
+  cover?: ProjectMedia;
+  /** The project's page, section by section. Leave out to show the carousel and the details only. */
+  sections?: ProjectSection[];
 }
 
 // To add a project, run `npm run media` on its photos and clips (see README),
@@ -89,7 +99,7 @@ export const projects: Project[] = [
   {
     slug: "nzau-animated-poster",
     title: "Animated Poster",
-    category: "Animation",
+    category: "Animation & Motion",
     description: "A poster brought to life with motion.",
     year: 2026,
     featured: true,
@@ -106,7 +116,7 @@ export const projects: Project[] = [
    {
     slug: "bird-render",
     title: "3D Renders",
-    category: "3D Design",
+    category: "Animation & Motion",
     description: "One line about it.",
     year: 2026,
     featured: true,
@@ -157,7 +167,7 @@ export const projects: Project[] = [
   {
     slug: "desk-light",
     title: "Desk light",
-    category: "3D Design",
+    category: "Animation & Motion",
     description: "One line about it.",
     year: 2026,
     featured: true,
@@ -169,7 +179,7 @@ export const projects: Project[] = [
   {
     slug: "subaru-fr",
     title: "Subaru FR",
-    category: "3D Design",
+    category: "Animation & Motion",
     description: "One line about it.",
     year: 2026,
     featured: true,

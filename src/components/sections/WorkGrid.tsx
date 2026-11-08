@@ -2,17 +2,20 @@
 
 import { useSearchParams } from "next/navigation";
 import { projects } from "@/data/portfolio";
+import { disciplines } from "@/data/disciplines";
 import type { TileSize } from "@/data/home";
 import WorkMosaic from "@/components/sections/WorkMosaic";
 
-// Only categories that have at least one project, in the order they first
-// appear, with how many projects each one holds.
-const categories = Array.from(
-  new Set(projects.map((project) => project.category)),
-).map((name) => ({
-  name,
-  count: projects.filter((project) => project.category === name).length,
-}));
+// Only disciplines that have at least one project, in the studio's own order,
+// with how many projects each one holds.
+const categories = disciplines
+  .map((discipline) => ({
+    name: discipline.name as string,
+    description: discipline.description as string,
+    count: projects.filter((project) => project.category === discipline.name)
+      .length,
+  }))
+  .filter((discipline) => discipline.count > 0);
 
 // The filters live in the page address (/portfolio?category=Photography&q=bird)
 // so the home page can link straight to a filtered view, and the Back button
@@ -67,10 +70,21 @@ export default function WorkGrid() {
     return words.every((word) => text.includes(word));
   });
 
+  // A project can choose its own size (`size` in portfolio.ts). Set it on all
+  // projects or none: projects without one fall into the automatic rhythm.
   const tiles = filtered.map((project, index) => ({
     project,
-    size: sizeFor(index, filtered.length),
+    size:
+      project.size === "large"
+        ? ("wide" as const)
+        : project.size === "small"
+          ? ("square" as const)
+          : sizeFor(index, filtered.length),
   }));
+
+  const activeDescription = categories.find(
+    (item) => item.name === category,
+  )?.description;
 
   function chooseCategory(next: string) {
     setAddress(next, query);
@@ -130,6 +144,12 @@ export default function WorkGrid() {
           },
         )}
       </div>
+
+      {activeDescription && (
+        <p className="mb-6 max-w-2xl text-lg text-[var(--foreground-muted)]">
+          {activeDescription}
+        </p>
+      )}
 
       <p
         className="mb-12 min-h-6 text-base text-[var(--foreground-muted)]"

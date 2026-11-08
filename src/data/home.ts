@@ -29,7 +29,7 @@ export const homeSections: HomeSection[] = [
   },
   {
     title: "3D and motion",
-    category: "3D Design",
+    category: "Animation & Motion",
     tiles: [
       { slug: "bird-render", size: "wide" },
       { slug: "subaru-fr", size: "square" },
