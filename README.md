@@ -38,7 +38,6 @@ src/
     navigation/Navbar.tsx     Site header and mobile menu
     layout/Footer.tsx         Site footer
     sections/WorkGrid.tsx     Filterable grid of projects (Work page)
-    sections/FeaturedWork.tsx Home page tiles, each linking to a project
     sections/ContactCta.tsx   "Have a project in mind?" band
     ui/ProjectCarousel.tsx    Swipeable, self-advancing photo carousel
     ui/HeroBackdrop.tsx       Photos and clips behind the home page welcome
