@@ -4,16 +4,13 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import type { ProjectMedia } from "@/data/portfolio";
 
-const PHOTO_MS = 6000; // how long a photo stays on screen
-const CLIP_FALLBACK_MS = 25000; // moves on if a clip never reports that it ended
+const PHOTO_MS = 6000;
+const CLIP_FALLBACK_MS = 25000;
 
 function prefersReducedMotion() {
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-// Full-bleed background for the home page's top section. Photos and clips take
-// turns, crossfading. Clips are silent, play once through, then the next
-// one fades in. A single clip loops.
 export default function HeroBackdrop({ media }: { media: ProjectMedia[] }) {
   const [current, setCurrent] = useState(0);
   const videos = useRef<(HTMLVideoElement | null)[]>([]);
@@ -21,7 +18,6 @@ export default function HeroBackdrop({ media }: { media: ProjectMedia[] }) {
 
   const next = () => setCurrent((index) => (index + 1) % total);
 
-  // Only the visible clip plays.
   useEffect(() => {
     videos.current.forEach((video, index) => {
       if (!video) return;
@@ -34,7 +30,6 @@ export default function HeroBackdrop({ media }: { media: ProjectMedia[] }) {
     });
   }, [current]);
 
-  // Move on after a photo's time is up (or if a clip stalls).
   useEffect(() => {
     if (total < 2 || prefersReducedMotion()) return;
     const delay = media[current].type === "video" ? CLIP_FALLBACK_MS : PHOTO_MS;

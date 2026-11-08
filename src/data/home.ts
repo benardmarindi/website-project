@@ -11,8 +11,11 @@
 export type TileSize = "wide" | "square";
 
 export const homeTiles: { slug: string; size: TileSize }[] = [
-  { slug: "race-day-photography", size: "wide" },
-  { slug: "moto-4-campaign", size: "square" },
+  {slug: "bird-render", size: "wide"},
   { slug: "nzau-animated-poster", size: "square" },
+  { slug: "moto-4-campaign", size: "square" },
   { slug: "pet-portraits", size: "wide" },
+  
+  { slug: "subaru-fr", size: "wide" },
+  { slug: "race-day-photography", size: "wide" },
 ];

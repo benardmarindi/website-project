@@ -1,14 +1,13 @@
 import Link from "next/link";
 import { projects } from "@/data/portfolio";
-import { homeTiles } from "@/data/home";
-import { heroFallback, heroMedia } from "@/data/hero";
-import HeroBackdrop from "@/components/ui/HeroBackdrop";
 import WorkMosaic from "@/components/sections/WorkMosaic";
 import ContactCta from "@/components/sections/ContactCta";
+import { heroFallback, heroMedia } from "@/data/hero";
+import HeroBackdrop from "@/components/ui/HeroBackdrop";
+  import { homeTiles } from "@/data/home";
 
 export default function Home() {
-  // Follow the order and sizes chosen in src/data/home.ts.
-  const tiles = homeTiles.flatMap(({ slug, size }) => {
+    const tiles = homeTiles.flatMap(({ slug, size }) => {
     const project = projects.find((item) => item.slug === slug);
     return project ? [{ project, size }] : [];
   });
@@ -30,37 +29,19 @@ export default function Home() {
         />
 
         <div className="container relative pb-14 pt-40 md:pb-20">
-          <h1 className="max-w-[12em] text-5xl leading-[1.02] md:text-7xl lg:text-[5.5rem]">
-            Welcome. Come and see what we&apos;ve been making.
-          </h1>
+          <h1 className="sr-only">RR Empire, a creative studio in Kenya</h1>
 
           <Link
             href="/portfolio"
-            className="mt-9 inline-block rounded-full bg-[var(--accent)] px-7 py-4 text-lg font-semibold text-[#151210] transition-colors hover:bg-[var(--accent-dark)]"
+            className="inline-block rounded-full bg-[var(--accent)] px-7 py-4 text-lg font-semibold text-[#151210] transition-colors hover:bg-[var(--accent-dark)]"
           >
             Browse the work
           </Link>
         </div>
       </section>
 
-      {/* Intro */}
-      <section className="container flex flex-wrap items-start gap-x-12 gap-y-8 py-24 md:py-32">
-        <p className="min-w-0 max-w-[22em] flex-1 basis-[420px] text-3xl leading-[1.25] font-normal tracking-tight md:text-[34px]">
-          RR Empire is a creative studio in Kenya. We take on design, film,
-          photography, animation and web projects, from a single poster to a
-          whole website.
-        </p>
-
-        <Link
-          href="/services"
-          className="border-b-[1.5px] border-[var(--accent)] pb-0.5 text-lg font-semibold text-[var(--accent)]"
-        >
-          What we do
-        </Link>
-      </section>
-
       {/* Work */}
-      <section className="container pb-28 md:pb-36">
+      <section className="container py-20 md:py-28">
         <div className="mb-10 flex items-baseline justify-between gap-6 md:mb-14">
           <h2 className="text-3xl md:text-4xl">Selected work</h2>
           <Link
@@ -71,7 +52,7 @@ export default function Home() {
           </Link>
         </div>
 
-        <WorkMosaic tiles={tiles} />
+               <WorkMosaic tiles={tiles} />
 
         <Link
           href="/portfolio"

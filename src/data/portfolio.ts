@@ -6,7 +6,10 @@ export type ProjectCategory =
   | "Web Development"
   | "System Development"
   | "Social Media"
-  | "Video Editing";
+  | "Video Editing"
+  | "3D Design"
+
+  ;
 
 // How a project's photos and clips change from one to the next.
 export type CarouselTransition = "slide" | "fade" | "wipe";
@@ -64,37 +67,11 @@ export const projects: Project[] = [
     featured: true,
     transition: "slide",
     media: [
-      {
-        type: "image",
-        src: "/portfolio/rider-mud.jpg",
-        alt: "A rider kicking up mud on a dirt track",
-      },
-      {
-        type: "image",
-        src: "/portfolio/trail-bridge.jpg",
-        alt: "A rough wooden bridge over a muddy trail",
-      },
-      {
+         {
         type: "image",
         src: "/portfolio/visual-identity.jpg",
         alt: "A quiet dirt lane lined with green hedges",
       },
-    ],
-  },
-  {
-    slug: "moto-4-campaign",
-    title: "Moto 4 campaign",
-    category: "Graphic Design",
-    description: "Event poster and campaign visuals for a motocross race.",
-    year: 2026,
-    featured: true,
-    transition: "fade",
-    media: [
-      {
-        type: "image",
-        src: "/portfolio/moto4-poster.jpg",
-        alt: "Moto 4 event poster with two riders",
-      },
       {
         type: "image",
         src: "/portfolio/rider-mud.jpg",
@@ -105,11 +82,13 @@ export const projects: Project[] = [
         src: "/portfolio/trail-bridge.jpg",
         alt: "A rough wooden bridge over a muddy trail",
       },
+   
     ],
   },
+     
   {
     slug: "nzau-animated-poster",
-    title: "Nzau animated poster",
+    title: "Animated Poster",
     category: "Animation",
     description: "A poster brought to life with motion.",
     year: 2026,
@@ -124,9 +103,37 @@ export const projects: Project[] = [
       },
     ],
   },
+   {
+    slug: "bird-render",
+    title: "3D Renders",
+    category: "3D Design",
+    description: "One line about it.",
+    year: 2026,
+    featured: true,
+    transition: "fade",
+    media: [
+      {
+        type: "video",
+        src: "/portfolio/bird-render/7.mp4",
+        poster: "/portfolio/bird-render/7-poster.jpg",
+        alt: "A 3D render of a bird in flight",
+      },
+        {
+        type: "image",
+        src: "/portfolio/subaru-fr/13.jpg",
+        alt: "TODO: describe this photo",
+      },
+       {
+        type: "image",
+        src: "/portfolio/desk-light/15.jpg",
+        alt: "TODO: describe this photo",
+      },
+      
+    ],
+  },
   {
     slug: "pet-portraits",
-    title: "Pet portraits",
+    title: "Pet Portraits",
     category: "Photography",
     description: "Natural-light portraits of dogs and cats.",
     year: 2026,
@@ -143,6 +150,90 @@ export const projects: Project[] = [
         src: "/portfolio/cat-up.jpg",
         alt: "A fluffy white cat looking up",
       },
+    ],
+  },
+
+    
+  {
+    slug: "desk-light",
+    title: "Desk light",
+    category: "3D Design",
+    description: "One line about it.",
+    year: 2026,
+    featured: true,
+    transition: "fade",
+    media: [
+  
+    ],
+  },
+  {
+    slug: "subaru-fr",
+    title: "Subaru FR",
+    category: "3D Design",
+    description: "One line about it.",
+    year: 2026,
+    featured: true,
+    transition: "slide",
+    media: [    
+      {
+        type: "image",
+        src: "/portfolio/subaru-fr/10.jpg",
+        alt: "TODO: describe this photo",
+      },
+      {
+        type: "image",
+        src: "/portfolio/subaru-fr/11.jpg",
+        alt: "TODO: describe this photo",
+      },
+      {
+        type: "image",
+        src: "/portfolio/subaru-fr/12.jpg",
+        alt: "TODO: describe this photo",
+      },
+      {
+        type: "image",
+        src: "/portfolio/subaru-fr/13.jpg",
+        alt: "TODO: describe this photo",
+      },
+      {
+        type: "image",
+        src: "/portfolio/subaru-fr/14.jpg",
+        alt: "TODO: describe this photo",
+      },
+      // paste block contents
+    ],
+  },
+  {
+    slug: "moto-4-campaign",
+    title: "Posters",
+    category: "Graphic Design",
+    description: "Event poster and campaign visuals for a motocross race.",
+    year: 2026,
+    featured: true,
+    transition: "fade",
+    media: [
+      {
+        type: "image",
+        src: "/portfolio/posters/kigen-mx5-copy-jpg.jpg",
+        alt: "TODO: describe this photo",
+      },
+       {
+        type: "image",
+        src: "/portfolio/posters/amir-moto-5-redone-jpg.jpg",
+        alt: "TODO: describe this photo",
+      },
+      
+      {
+        type: "image",
+        src: "/portfolio/posters/moto-5-jpg.jpg",
+        alt: "TODO: describe this photo",
+      },
+      {
+        type: "image",
+        src: "/portfolio/moto4-poster.jpg",
+        alt: "Moto 4 event poster with two riders",
+      },
+      
     ],
   },
 ];

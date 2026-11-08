@@ -38,14 +38,10 @@ src/
     navigation/Navbar.tsx     Site header and mobile menu
     layout/Footer.tsx         Site footer
     sections/WorkGrid.tsx     Filterable grid of projects (Work page)
-    sections/WorkMosaic.tsx   Home page wide and square project tiles
     sections/ContactCta.tsx   "Have a project in mind?" band
     ui/ProjectCarousel.tsx    Swipeable, self-advancing photo carousel
-    ui/HeroBackdrop.tsx       Photos and clips behind the home page welcome
   data/
     portfolio.ts              Portfolio projects
-    hero.ts                   Photos and clips behind the home page welcome
-    home.ts                   Order and size of the home page tiles
     site.ts                   Email address and social links
 public/
   brand/                      Logos
@@ -72,10 +68,6 @@ Choose how the slides change with `transition`:
 - `"slide"` pushes the next photo in from the side
 - `"fade"` crossfades while slowly zooming
 - `"wipe"` reveals the next photo with a wipe
-
-## The home page hero
-
-The photos and clips behind the welcome text live in `src/data/hero.ts`. Put the raw files in `media-source/hero/`, run `npm run media -- hero`, and paste the printed block into `heroMedia`. They play one after another with a crossfade. Wide, short clips (5 to 15 seconds) work best. With the list empty, the default photo shows.
 
 ## Your details
 
