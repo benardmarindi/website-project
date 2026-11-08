@@ -11,6 +11,7 @@ export default function Home() {
   const sections = homeSections
     .map((section) => ({
       title: section.title,
+      category: section.category,
       tiles: section.tiles.flatMap(({ slug, size }) => {
         const project = projects.find((item) => item.slug === slug);
         return project ? [{ project, size }] : [];
@@ -54,7 +55,19 @@ export default function Home() {
             index > 0 ? "border-t border-[var(--border)]" : ""
           }`}
         >
-          <h2 className="mb-10 text-3xl md:text-4xl">{section.title}</h2>
+          <div className="mb-10 flex items-baseline justify-between gap-6">
+            <h2 className="text-3xl md:text-4xl">{section.title}</h2>
+            <Link
+              href={
+                section.category
+                  ? `/portfolio?category=${encodeURIComponent(section.category)}`
+                  : "/portfolio"
+              }
+              className="shrink-0 text-lg text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent)]"
+            >
+              See all →
+            </Link>
+          </div>
           <WorkMosaic tiles={section.tiles} />
         </section>
       ))}

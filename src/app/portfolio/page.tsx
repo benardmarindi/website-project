@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import WorkGrid from "@/components/sections/WorkGrid";
 import ContactCta from "@/components/sections/ContactCta";
@@ -18,12 +19,14 @@ export default function PortfolioPage() {
           </h1>
 
           <p className="mt-8 max-w-xl text-xl leading-relaxed text-[var(--foreground-muted)]">
-            Design, film, photography, animation and web projects. Swipe
-            through the photos on any project, or open one to see more.
+            Design, film, photography, animation and web projects. Search or
+            filter, then open any project to see it in full.
           </p>
         </header>
 
-        <WorkGrid />
+        <Suspense fallback={<div className="min-h-[60svh]" />}>
+          <WorkGrid />
+        </Suspense>
       </div>
 
       <ContactCta />
