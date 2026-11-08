@@ -63,6 +63,8 @@ export default function WorkGrid() {
                   media={project.media}
                   transition={project.transition}
                   label={project.title}
+                  href={`/portfolio/${project.slug}`}
+                  calm
                   aspectClass={
                     wide ? "aspect-[4/3] md:aspect-[2/1]" : "aspect-square"
                   }

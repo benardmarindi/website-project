@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent, ReactNode } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import type { CarouselTransition, ProjectMedia } from "@/data/portfolio";
 
 interface ProjectCarouselProps {
@@ -19,6 +20,14 @@ interface ProjectCarouselProps {
   /** Milliseconds each photo stays on screen. Clips stay until they finish. */
   interval?: number;
   priority?: boolean;
+  /** Where a click or tap on the picture goes, e.g. the project's own page. */
+  href?: string;
+  /**
+   * Calmer mode for pages with many carousels. On a device with a mouse, the
+   * carousel only moves while the pointer is over it. On a touchscreen it only
+   * moves while mostly on screen.
+   */
+  calm?: boolean;
 }
 
 const ACTIVE = "#e2b07a";
@@ -29,6 +38,9 @@ const VIDEO_FALLBACK = 15000;
 
 const prefersReducedMotion = () =>
   window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+// True on devices with a mouse or trackpad (as opposed to a touchscreen).
+const canHover = () => window.matchMedia("(hover: hover)").matches;
 
 // Each transition describes where a slide sits depending on whether it is the
 // current one, the one just left, or one of the others waiting its turn.
@@ -90,7 +102,10 @@ export default function ProjectCarousel({
   caption,
   interval = 5000,
   priority = false,
+  href,
+  calm = false,
 }: ProjectCarouselProps) {
+  const router = useRouter();
   const total = media.length;
   const [position, setPosition] = useState({ current: 0, previous: 0 });
   const [paused, setPaused] = useState(false);
@@ -117,17 +132,21 @@ export default function ProjectCarousel({
 
     const observer = new IntersectionObserver(
       ([entry]) => setVisible(entry.isIntersecting),
-      { threshold: 0.25 },
+      { threshold: calm ? 0.6 : 0.25 },
     );
     observer.observe(frame);
     return () => observer.disconnect();
-  }, []);
+  }, [calm]);
 
   // Move on by itself: after a set time for photos, and a few seconds after a
   // clip ends for clips. Stops while the person is hovering or touching, when
   // the carousel is off screen, or if their device asks for reduced motion.
   useEffect(() => {
-    if (total < 2 || paused || !visible || prefersReducedMotion()) return;
+    if (total < 2 || !visible || prefersReducedMotion()) return;
+    // Calm mode on a mouse device: move only while the pointer is over it.
+    // Otherwise: move unless someone is hovering or touching.
+    const hoverOnly = calm && canHover();
+    if (hoverOnly ? !paused : paused) return;
 
     const isClip = media[position.current].type === "video";
     const timer = window.setTimeout(
@@ -135,16 +154,18 @@ export default function ProjectCarousel({
       isClip ? VIDEO_FALLBACK : interval,
     );
     return () => window.clearTimeout(timer);
-  }, [total, paused, visible, position, media, interval, step]);
+  }, [total, paused, visible, position, media, interval, step, calm]);
 
   // Play the clip that is showing, pause and rewind the others.
   useEffect(() => {
     const reduce = prefersReducedMotion();
+    const hoverOnly = calm && canHover();
+    const allowed = visible && !reduce && (!hoverOnly || paused);
 
     videoRefs.current.forEach((video, index) => {
       if (!video) return;
 
-      if (index === position.current && visible && !reduce) {
+      if (index === position.current && allowed) {
         video.play().catch(() => {
           // Autoplay was blocked: the still poster stays up instead.
         });
@@ -153,13 +174,14 @@ export default function ProjectCarousel({
         if (index !== position.current) video.currentTime = 0;
       }
     });
-  }, [position, visible]);
+  }, [position, visible, paused, calm]);
 
   function handleClipEnded(index: number) {
     if (index !== position.current || total < 2) return;
 
     const clip = videoRefs.current[index];
-    if (paused && clip) {
+    const holding = paused && !(calm && canHover());
+    if (holding && clip) {
       // Someone is looking at it: replay instead of moving on.
       clip.currentTime = 0;
       clip.play().catch(() => {});
@@ -182,15 +204,19 @@ export default function ProjectCarousel({
       const distance = event.clientX - swipeStart.current;
       if (Math.abs(distance) > SWIPE_DISTANCE) {
         step(distance < 0 ? 1 : -1);
+      } else if (href && event.button === 0) {
+        // A tap or click, not a swipe: open the project.
+        router.push(href);
       }
     }
     swipeStart.current = null;
-    setPaused(false);
+    // A mouse is still over the carousel after the button is released.
+    setPaused(event.pointerType === "mouse");
   }
 
-  function handlePointerCancel() {
+  function handlePointerCancel(event: PointerEvent<HTMLDivElement>) {
     swipeStart.current = null;
-    setPaused(false);
+    setPaused(event.pointerType === "mouse");
   }
 
   const showControls = total > 1;
@@ -210,7 +236,7 @@ export default function ProjectCarousel({
         onPointerDown={handlePointerDown}
         onPointerUp={handlePointerUp}
         onPointerCancel={handlePointerCancel}
-        className={`relative touch-pan-y select-none overflow-hidden rounded-lg bg-[var(--surface)] ${aspectClass}`}
+        className={`relative touch-pan-y select-none overflow-hidden rounded-lg bg-[var(--surface)] ${aspectClass} ${href ? "cursor-pointer" : ""}`}
       >
         {media.map((item, index) => (
           <div

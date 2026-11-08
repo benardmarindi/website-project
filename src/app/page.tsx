@@ -4,13 +4,19 @@ import WorkMosaic from "@/components/sections/WorkMosaic";
 import ContactCta from "@/components/sections/ContactCta";
 import { heroFallback, heroMedia } from "@/data/hero";
 import HeroBackdrop from "@/components/ui/HeroBackdrop";
-  import { homeTiles } from "@/data/home";
+  import { homeSections } from "@/data/home";
 
 export default function Home() {
-    const tiles = homeTiles.flatMap(({ slug, size }) => {
-    const project = projects.find((item) => item.slug === slug);
-    return project ? [{ project, size }] : [];
-  });
+    // Follow the sections, order and sizes chosen in src/data/home.ts.
+  const sections = homeSections
+    .map((section) => ({
+      title: section.title,
+      tiles: section.tiles.flatMap(({ slug, size }) => {
+        const project = projects.find((item) => item.slug === slug);
+        return project ? [{ project, size }] : [];
+      }),
+    }))
+    .filter((section) => section.tiles.length > 0);
 
   return (
     <>
@@ -40,23 +46,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Work */}
-      <section className="container py-20 md:py-28">
-        <div className="mb-10 flex items-baseline justify-between gap-6 md:mb-14">
-          <h2 className="text-3xl md:text-4xl">Selected work</h2>
-          <Link
-            href="/portfolio"
-            className="text-lg text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent)]"
-          >
-            All work →
-          </Link>
-        </div>
+      {/* Work, in titled sections */}
+      {sections.map((section, index) => (
+        <section
+          key={section.title}
+          className={`container py-16 md:py-24 ${
+            index > 0 ? "border-t border-[var(--border)]" : ""
+          }`}
+        >
+          <h2 className="mb-10 text-3xl md:text-4xl">{section.title}</h2>
+          <WorkMosaic tiles={section.tiles} />
+        </section>
+      ))}
 
-               <WorkMosaic tiles={tiles} />
-
+      <section className="container pb-24 md:pb-32">
         <Link
           href="/portfolio"
-          className="mt-16 inline-block border-b-[1.5px] border-[var(--accent)] pb-0.5 text-lg font-semibold text-[var(--accent)]"
+          className="inline-block border-b-[1.5px] border-[var(--accent)] pb-0.5 text-lg font-semibold text-[var(--accent)]"
         >
           See all work
         </Link>
