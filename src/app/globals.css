@@ -1,29 +1,32 @@
-
 @import "tailwindcss";
 
 :root {
-  /* Main backgrounds */
-  --background: #080808;
-  --background-soft: #0d0d0d;
-  --surface: #111111;
-  --surface-hover: #191919;
+  /* Backgrounds: warm dark brown, taken from the dirt-track photos */
+  --background: #151210;
+  --background-soft: #1b1714;
+  --surface: #221d19;
+  --surface-hover: #2a2420;
 
-  /* Typography */
-  --foreground: #f3f2f5;
-  --foreground-muted: #aaa8b2;
-  --foreground-subtle: #777580;
+  /* Text */
+  --foreground: #f4efe9;
+  --foreground-muted: #b5aaa0;
+  --foreground-subtle: #8f857b;
 
-  /* Borders */
-  --border: rgba(231, 228, 255, 0.09);
-  --border-strong: rgba(231, 228, 255, 0.17);
+  /* Lines */
+  --border: #332b25;
+  --border-strong: #4a3f36;
 
-  /* RR Empire brand accent */
-  --accent: #b9b6e8;
-  --accent-dark: #9995d0;
-  --accent-soft: rgba(185, 182, 232, 0.1);
+  /* Accent: sand */
+  --accent: #e2b07a;
+  --accent-dark: #c99560;
+  --accent-soft: rgba(226, 176, 122, 0.12);
 
   /* Layout */
-  --max-width: 1440px;
+  --max-width: 1360px;
+}
+
+@theme inline {
+  --font-sans: var(--font-hanken), system-ui, sans-serif;
 }
 
 * {
@@ -39,7 +42,9 @@ body {
   margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-inter), sans-serif;
+  font-family: var(--font-hanken), system-ui, sans-serif;
+  font-size: 18px;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -54,9 +59,13 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+button {
+  cursor: pointer;
+}
+
 ::selection {
   background: var(--accent);
-  color: #080808;
+  color: #151210;
 }
 
 img,
@@ -89,11 +98,22 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: var(--font-space-grotesk), sans-serif;
-  letter-spacing: -0.04em;
+  margin: 0;
+  font-weight: 300;
+  letter-spacing: -0.035em;
 }
 
 :focus-visible {
-  outline: 1px solid var(--accent);
-  outline-offset: 4px;
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .carousel-slide {
+    transition: none !important;
+  }
 }

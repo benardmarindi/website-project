@@ -8,6 +8,31 @@ export type ProjectCategory =
   | "Social Media"
   | "Video Editing";
 
+// How a project's photos and clips change from one to the next.
+export type CarouselTransition = "slide" | "fade" | "wipe";
+
+// One slide in a project's carousel: a photo, or a short silent clip that
+// plays on its own. `poster` is the still shown while the clip loads.
+export type ProjectMedia =
+  | { type: "image"; src: string; alt: string }
+  | { type: "video"; src: string; poster: string; alt: string };
+
+// A full-length film hosted on YouTube or Vimeo, shown on the project's page.
+// `id` is the part of the video's address that identifies it:
+//   youtube.com/watch?v=dQw4w9WgXcQ  ->  "dQw4w9WgXcQ"
+//   vimeo.com/76979871               ->  "76979871"
+export interface ProjectFilm {
+  provider: "youtube" | "vimeo";
+  id: string;
+  title: string;
+}
+
+export function filmEmbedUrl(film: ProjectFilm): string {
+  return film.provider === "youtube"
+    ? `https://www.youtube-nocookie.com/embed/${film.id}`
+    : `https://player.vimeo.com/video/${film.id}`;
+}
+
 export interface Project {
   slug: string;
   title: string;
@@ -15,61 +40,109 @@ export interface Project {
   description: string;
   year: number;
   featured: boolean;
-  image?: string;
+  /** Photos and short clips shown in the project's carousel, in order. */
+  media: ProjectMedia[];
+  /** Animation used when the carousel changes slide. */
+  transition: CarouselTransition;
+  /** Optional full-length film, shown on the project's own page. */
+  film?: ProjectFilm;
   client?: string;
   role?: string;
   brief?: string;
   outcome?: string;
-  gallery?: string[];
 }
 
-// TODO: add `image` (e.g. "/portfolio/<slug>.jpg") to each project once the file exists in /public.
-// Projects without an image show a numbered placeholder.
+// To add a project, run `npm run media` on its photos and clips (see README),
+// then paste the snippet it prints into the `media` list of a new entry below.
 export const projects: Project[] = [
   {
-    slug: "visual-identity",
-    title: "Visual Identity",
+    slug: "race-day-photography",
+    title: "Race day photography",
+    category: "Photography",
+    description: "Action and trail photography from race day.",
+    year: 2026,
+    featured: true,
+    transition: "slide",
+    media: [
+      {
+        type: "image",
+        src: "/portfolio/rider-mud.jpg",
+        alt: "A rider kicking up mud on a dirt track",
+      },
+      {
+        type: "image",
+        src: "/portfolio/trail-bridge.jpg",
+        alt: "A rough wooden bridge over a muddy trail",
+      },
+      {
+        type: "image",
+        src: "/portfolio/visual-identity.jpg",
+        alt: "A quiet dirt lane lined with green hedges",
+      },
+    ],
+  },
+  {
+    slug: "moto-4-campaign",
+    title: "Moto 4 campaign",
     category: "Graphic Design",
-    description:
-      "Visual communication built around a clear identity, strong composition and memorable design.",
+    description: "Event poster and campaign visuals for a motocross race.",
     year: 2026,
     featured: true,
-    image: "/portfolio/visual-identity.jpg",
-    client: "Creative Studio",
-    role: "Art Direction & Graphic Design",
-    brief:
-      "A visual identity project focused on creating a distinctive and consistent visual language.",
-    outcome:
-      "A flexible visual system designed to work across digital and physical communication.",
+    transition: "fade",
+    media: [
+      {
+        type: "image",
+        src: "/portfolio/moto4-poster.jpg",
+        alt: "Moto 4 event poster with two riders",
+      },
+      {
+        type: "image",
+        src: "/portfolio/rider-mud.jpg",
+        alt: "A rider kicking up mud on a dirt track",
+      },
+      {
+        type: "image",
+        src: "/portfolio/trail-bridge.jpg",
+        alt: "A rough wooden bridge over a muddy trail",
+      },
+    ],
   },
   {
-    slug: "moving-stories",
-    title: "Moving Stories",
-    category: "Videography",
-    description:
-      "Visual storytelling through cinematic production, editing and motion.",
+    slug: "nzau-animated-poster",
+    title: "Nzau animated poster",
+    category: "Animation",
+    description: "A poster brought to life with motion.",
     year: 2026,
     featured: true,
-    client: "Creative Studio",
-    role: "Production & Video Editing",
-    brief:
-      "A visual storytelling project built around movement, atmosphere and strong narrative.",
-    outcome:
-      "A cinematic visual piece designed for digital platforms and social media.",
+    transition: "fade",
+    media: [
+      {
+        type: "video",
+        src: "/portfolio/nzau-animated-poster/nzau-animated-poster-1.mp4",
+        poster: "/portfolio/nzau-animated-poster/nzau-animated-poster-1-poster.jpg",
+        alt: "The Nzau poster animating in a loop",
+      },
+    ],
   },
   {
-    slug: "digital-experiences",
-    title: "Digital Experiences",
-    category: "Web Development",
-    description:
-      "Modern digital experiences designed to connect people, ideas and technology.",
+    slug: "pet-portraits",
+    title: "Pet portraits",
+    category: "Photography",
+    description: "Natural-light portraits of dogs and cats.",
     year: 2026,
     featured: true,
-    client: "Creative Studio",
-    role: "Web Design & Development",
-    brief:
-      "A digital experience combining visual design, interaction and modern web technology.",
-    outcome:
-      "A responsive digital experience designed around clarity, usability and visual impact.",
+    transition: "wipe",
+    media: [
+      {
+        type: "image",
+        src: "/portfolio/dog-moss.jpg",
+        alt: "A brown and white dog resting on mossy ground",
+      },
+      {
+        type: "image",
+        src: "/portfolio/cat-up.jpg",
+        alt: "A fluffy white cat looking up",
+      },
+    ],
   },
 ];

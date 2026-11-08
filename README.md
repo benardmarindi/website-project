@@ -36,24 +36,56 @@ src/
     globals.css               Theme variables and base styles
   components/
     navigation/Navbar.tsx     Site header and mobile menu
-    sections/SelectedWork.tsx Featured work section
+    layout/Footer.tsx         Site footer
+    sections/WorkGrid.tsx     Filterable grid of projects (Work page)
+    sections/WorkMosaic.tsx   Home page wide and square project tiles
+    sections/ContactCta.tsx   "Have a project in mind?" band
+    ui/ProjectCarousel.tsx    Swipeable, self-advancing photo carousel
+    ui/HeroBackdrop.tsx       Photos and clips behind the home page welcome
   data/
     portfolio.ts              Portfolio projects
+    hero.ts                   Photos and clips behind the home page welcome
+    home.ts                   Order and size of the home page tiles
+    site.ts                   Email address and social links
 public/
   brand/                      Logos
-  hero/                       Hero photos and video
-  portfolio/                  Project images
+  hero/                       Original photos and video (large)
+  portfolio/                  Web-sized project photos and clips
+scripts/
+  optimize-media.mjs          Makes photos and clips web-ready (npm run media)
+media-source/                 Your raw originals (stays on your computer)
 ```
 
-## Adding a portfolio project
+## Adding photos and videos
 
-Add an entry to `src/data/portfolio.ts`. Put its image in `public/portfolio/` and set `image` to its path (for example `"/portfolio/my-project.jpg"`). A project without an `image` shows a numbered placeholder.
+1. Install [ffmpeg](https://ffmpeg.org) once (`winget install ffmpeg` on Windows, `brew install ffmpeg` on Mac).
+2. Make a folder per project in `media-source/` (the folder name becomes the project's slug) and drop the raw photos and clips in. This folder stays on your computer and is never uploaded to GitHub.
+3. Run `npm run media`. It shrinks every photo and clip for the web, saves them in `public/portfolio/<slug>/`, and prints a `media: [ ... ]` snippet.
+4. Add an entry to `src/data/portfolio.ts`, paste the snippet in, and write a real description in each `alt`.
+
+Photos become 2000px-wide JPGs. Clips become silent 720p MP4s with a still frame to show while they load. Keep clips short (under about 15 seconds): they play on a loop inside the carousel, and the carousel moves on when a clip ends. Full-length films belong on YouTube or Vimeo. Add `film: { provider: "youtube", id: "...", title: "..." }` to the project and it appears as a player on the project's own page.
+
+Two or more photos or clips make a carousel that swipes and changes by itself.
+
+Choose how the slides change with `transition`:
+
+- `"slide"` pushes the next photo in from the side
+- `"fade"` crossfades while slowly zooming
+- `"wipe"` reveals the next photo with a wipe
+
+## The home page hero
+
+The photos and clips behind the welcome text live in `src/data/hero.ts`. Put the raw files in `media-source/hero/`, run `npm run media -- hero`, and paste the printed block into `heroMedia`. They play one after another with a crossfade. Wide, short clips (5 to 15 seconds) work best. With the list empty, the default photo shows.
+
+## Your details
+
+`src/data/site.ts` holds your email address and social media links. Fill them in and they update everywhere. Social links with no address are hidden.
 
 ## Status
 
 Work in progress. Still to build:
 
-- Contact form submission (the form currently does not send anything)
+- Contact form that sends straight to your inbox (it currently opens the visitor's email app)
 - Payment integration
 - Social media links and connections
 - Real portfolio content and images

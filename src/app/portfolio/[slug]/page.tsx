@@ -1,7 +1,9 @@
-import Image from "next/image";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { projects } from "@/data/portfolio";
+import { filmEmbedUrl, projects } from "@/data/portfolio";
+import ProjectCarousel from "@/components/ui/ProjectCarousel";
+import ContactCta from "@/components/sections/ContactCta";
 
 interface ProjectPageProps {
   params: Promise<{
@@ -15,233 +17,133 @@ export function generateStaticParams() {
   }));
 }
 
-export default async function ProjectPage({
+export async function generateMetadata({
   params,
-}: ProjectPageProps) {
+}: ProjectPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const project = projects.find((item) => item.slug === slug);
+
+  return {
+    title: project?.title ?? "Project",
+    description: project?.description,
+  };
+}
+
+export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
 
-  const project = projects.find((item) => item.slug === slug);
+  const index = projects.findIndex((item) => item.slug === slug);
+  const project = projects[index];
 
   if (!project) {
     notFound();
   }
 
+  const next = projects[(index + 1) % projects.length];
+
+  const details = [
+    { label: "Client", value: project.client },
+    { label: "Role", value: project.role },
+    { label: "Type", value: project.category },
+    { label: "Year", value: String(project.year) },
+  ].filter((detail) => detail.value);
+
   return (
-    <main className="min-h-screen bg-[var(--background)] pt-32">
-      <div className="container pb-32 md:pb-48">
-        {/* Project Header */}
-        <header className="max-w-6xl">
-          <div className="mb-8 flex flex-wrap items-center gap-3">
-            <span className="text-xs uppercase tracking-[0.2em] text-[var(--accent)]">
-              {project.category}
-            </span>
+    <>
+      <div className="container pb-24 pt-36 md:pb-32 md:pt-44">
+        <Link
+          href="/portfolio"
+          className="text-base text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent)]"
+        >
+          ← All work
+        </Link>
 
-            <span className="h-px w-8 bg-[var(--border-strong)]" />
-
-            <span className="text-xs text-[var(--foreground-subtle)]">
-              {project.year}
-            </span>
-          </div>
-
-          <h1 className="max-w-6xl font-[var(--font-space-grotesk)] text-6xl font-medium leading-[0.85] tracking-[-0.07em] md:text-[9rem]">
+        <header className="mt-8 max-w-4xl">
+          <h1 className="text-5xl leading-[1.04] md:text-7xl">
             {project.title}
           </h1>
 
-          <p className="mt-10 max-w-3xl text-lg leading-8 text-[var(--foreground-muted)] md:text-2xl md:leading-10">
+          <p className="mt-8 max-w-2xl text-xl leading-relaxed text-[var(--foreground-muted)] md:text-2xl">
             {project.description}
           </p>
         </header>
 
-        {/* Hero Image */}
-        <div className="relative mt-20 aspect-[16/9] overflow-hidden bg-[var(--surface)] md:mt-32">
-          {project.image ? (
-            <Image
-              src={project.image}
-              alt={project.title}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
-          ) : (
-            <div className="flex h-full items-center justify-center">
-              <span className="font-[var(--font-space-grotesk)] text-[20vw] font-medium tracking-[-0.08em] text-white/[0.035]">
-                01
-              </span>
-            </div>
-          )}
+        <div className="mt-14 md:mt-20">
+          <ProjectCarousel
+            media={project.media}
+            transition={project.transition}
+            label={project.title}
+            aspectClass="aspect-[4/3] md:aspect-[16/9]"
+            sizes="(min-width: 1400px) 1360px, 100vw"
+            priority
+          />
         </div>
 
-        {/* Project Information */}
-        <div className="mt-16 grid gap-10 border-b border-[var(--border)] pb-16 md:grid-cols-4 md:gap-8">
-          <div>
-            <p className="mb-3 text-xs uppercase tracking-[0.18em] text-[var(--foreground-subtle)]">
-              Client
-            </p>
-
-            <p className="text-sm text-[var(--foreground-muted)]">
-              {project.client || "—"}
-            </p>
-          </div>
-
-          <div>
-            <p className="mb-3 text-xs uppercase tracking-[0.18em] text-[var(--foreground-subtle)]">
-              Role
-            </p>
-
-            <p className="text-sm text-[var(--foreground-muted)]">
-              {project.role || "—"}
-            </p>
-          </div>
-
-          <div>
-            <p className="mb-3 text-xs uppercase tracking-[0.18em] text-[var(--foreground-subtle)]">
-              Category
-            </p>
-
-            <p className="text-sm text-[var(--foreground-muted)]">
-              {project.category}
-            </p>
-          </div>
-
-          <div>
-            <p className="mb-3 text-xs uppercase tracking-[0.18em] text-[var(--foreground-subtle)]">
-              Year
-            </p>
-
-            <p className="text-sm text-[var(--foreground-muted)]">
-              {project.year}
-            </p>
-          </div>
-        </div>
-
-        {/* Brief + Outcome */}
-        <section className="mt-24 grid gap-16 md:grid-cols-2 md:gap-24">
-          <div>
-            <p className="mb-6 text-xs uppercase tracking-[0.2em] text-[var(--accent)]">
-              01 — The Brief
-            </p>
-
-            <h2 className="max-w-xl font-[var(--font-space-grotesk)] text-4xl font-medium leading-tight tracking-[-0.04em] md:text-5xl">
-              The idea behind the work.
-            </h2>
-
-            <p className="mt-8 max-w-xl text-base leading-8 text-[var(--foreground-muted)]">
-              {project.brief || project.description}
-            </p>
-          </div>
-
-          <div>
-            <p className="mb-6 text-xs uppercase tracking-[0.2em] text-[var(--accent)]">
-              02 — The Outcome
-            </p>
-
-            <h2 className="max-w-xl font-[var(--font-space-grotesk)] text-4xl font-medium leading-tight tracking-[-0.04em] md:text-5xl">
-              Built to make an impact.
-            </h2>
-
-            <p className="mt-8 max-w-xl text-base leading-8 text-[var(--foreground-muted)]">
-              {project.outcome || project.description}
-            </p>
-          </div>
-        </section>
-
-        {/* Gallery */}
-        <section className="mt-24 md:mt-32">
-          <div className="mb-10 flex items-end justify-between border-b border-[var(--border)] pb-6">
-            <div>
-              <p className="text-xs uppercase tracking-[0.2em] text-[var(--accent)]">
-                03 — Selected Images
-              </p>
-
-              <h2 className="mt-3 font-[var(--font-space-grotesk)] text-3xl font-medium tracking-[-0.04em] md:text-4xl">
-                Inside the project.
-              </h2>
+        {project.film && (
+          <section className="mt-20">
+            <h2 className="mb-8 text-3xl md:text-4xl">Watch the film</h2>
+            <div className="aspect-video overflow-hidden rounded-lg bg-[var(--surface)]">
+              <iframe
+                src={filmEmbedUrl(project.film)}
+                title={project.film.title}
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                allowFullScreen
+                className="h-full w-full border-0"
+              />
             </div>
-          </div>
+          </section>
+        )}
 
-          {project.gallery && project.gallery.length > 0 ? (
-            <div className="grid gap-6 md:grid-cols-2">
-              {project.gallery.map((image, index) => (
-                <div
-                  key={image}
-                  className={`relative overflow-hidden bg-[var(--surface)] ${
-                    index === 0 ? "md:col-span-2 aspect-[16/8]" : "aspect-[4/5]"
-                  }`}
-                >
-                  <Image
-                    src={image}
-                    alt={`${project.title} — image ${index + 1}`}
-                    fill
-                    sizes={
-                      index === 0
-                        ? "100vw"
-                        : "(max-width: 768px) 100vw, 50vw"
-                    }
-                    className="object-cover"
-                  />
-                </div>
-              ))}
+        <dl className="mt-14 grid grid-cols-2 gap-x-8 gap-y-8 border-b border-[var(--border)] pb-14 md:grid-cols-4">
+          {details.map((detail) => (
+            <div key={detail.label}>
+              <dt className="text-base text-[var(--foreground-subtle)]">
+                {detail.label}
+              </dt>
+              <dd className="mt-1 text-lg">{detail.value}</dd>
             </div>
-          ) : (
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="flex aspect-[4/5] items-center justify-center bg-[var(--surface)]">
-                <span className="text-xs uppercase tracking-[0.2em] text-[var(--foreground-subtle)]">
-                  Project Image
-                </span>
+          ))}
+        </dl>
+
+        {(project.brief || project.outcome) && (
+          <section className="mt-20 grid gap-14 md:grid-cols-2 md:gap-24">
+            {project.brief && (
+              <div>
+                <h2 className="text-3xl md:text-4xl">The idea</h2>
+                <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--foreground-muted)]">
+                  {project.brief}
+                </p>
               </div>
+            )}
 
-              <div className="flex aspect-[4/5] items-center justify-center bg-[var(--surface)]">
-                <span className="text-xs uppercase tracking-[0.2em] text-[var(--foreground-subtle)]">
-                  Project Image
-                </span>
+            {project.outcome && (
+              <div>
+                <h2 className="text-3xl md:text-4xl">The result</h2>
+                <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--foreground-muted)]">
+                  {project.outcome}
+                </p>
               </div>
-            </div>
-          )}
-        </section>
+            )}
+          </section>
+        )}
 
-        {/* Bottom CTA */}
-        <section className="mt-32 border-t border-[var(--border)] pt-16 md:mt-48">
-          <p className="text-xs uppercase tracking-[0.2em] text-[var(--accent)]">
-            Have a project in mind?
-          </p>
-
-          <div className="mt-6 flex flex-col justify-between gap-10 md:flex-row md:items-end">
-            <h2 className="max-w-4xl font-[var(--font-space-grotesk)] text-5xl font-medium leading-[0.9] tracking-[-0.06em] md:text-8xl">
-              Let&apos;s create
-              <br />
-              something <span className="text-[var(--accent)]">great.</span>
-            </h2>
-
-            <Link
-              href="/contact"
-              className="group flex w-fit shrink-0 items-center gap-4 rounded-full bg-[var(--accent)] px-7 py-4 text-sm font-medium text-black transition-transform duration-300 hover:translate-x-1"
-            >
-              Start a project
-              <span className="transition-transform duration-300 group-hover:translate-x-1">
-                →
-              </span>
-            </Link>
-          </div>
-        </section>
-
-        {/* Navigation */}
-        <div className="mt-20 flex justify-between border-t border-[var(--border)] pt-8">
+        {next && next.slug !== project.slug && (
           <Link
-            href="/portfolio"
-            className="text-sm uppercase tracking-[0.12em] text-[var(--foreground-muted)] transition-colors hover:text-[var(--foreground)]"
+            href={`/portfolio/${next.slug}`}
+            className="group mt-24 block border-t border-[var(--border)] pt-10"
           >
-            ← All work
+            <span className="text-base text-[var(--foreground-subtle)]">
+              Next project
+            </span>
+            <span className="mt-2 block text-4xl tracking-tight transition-colors group-hover:text-[var(--accent)] md:text-6xl">
+              {next.title}
+            </span>
           </Link>
-
-          <Link
-            href="/contact"
-            className="text-sm uppercase tracking-[0.12em] text-[var(--accent)]"
-          >
-            Start a project →
-          </Link>
-        </div>
+        )}
       </div>
-    </main>
+
+      <ContactCta />
+    </>
   );
 }

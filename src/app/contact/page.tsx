@@ -1,188 +1,130 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import { site } from "@/data/site";
+
+export const metadata: Metadata = {
+  title: "Contact",
+  description: "Tell us about your project and we'll get back to you.",
+};
+
+const fieldClass =
+  "w-full rounded-lg border border-[var(--border-strong)] bg-[var(--surface)] px-4 py-3.5 text-lg text-[var(--foreground)] placeholder:text-[var(--foreground-subtle)] focus:border-[var(--accent)] focus:outline-none";
+
+const labelClass = "mb-2 block text-base text-[var(--foreground-muted)]";
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen bg-[var(--background)] pt-32">
-      <div className="container pb-32 md:pb-48">
-        {/* Intro */}
-        <header className="flex min-h-[70vh] flex-col justify-end pb-20 md:pb-28">
-          <p className="mb-6 text-xs uppercase tracking-[0.18em] text-[var(--accent)]">
-            Contact
-          </p>
+    <div className="container pb-28 pt-36 md:pb-36 md:pt-44">
+      <header className="mb-16 md:mb-20">
+        <h1 className="max-w-[12em] text-5xl leading-[1.04] md:text-7xl">
+          Tell us about your project.
+        </h1>
 
-          <h1 className="max-w-6xl font-[var(--font-space-grotesk)] text-6xl font-medium leading-[0.86] tracking-[-0.07em] md:text-[9rem]">
-            Start a
-            <br />
-            <span className="text-[var(--foreground-muted)]">
-              conversation.
-            </span>
-          </h1>
-        </header>
+        <p className="mt-8 max-w-xl text-xl leading-relaxed text-[var(--foreground-muted)]">
+          For projects, collaborations and creative enquiries. Fill in the
+          form, or write to us at{" "}
+          <a
+            href={`mailto:${site.email}`}
+            className="text-[var(--accent)] underline underline-offset-4"
+          >
+            {site.email}
+          </a>
+          .
+        </p>
+      </header>
 
-        {/* Contact Grid */}
-        <section className="border-t border-[var(--border)] py-16 md:py-24">
-          <div className="grid gap-16 md:grid-cols-[1fr_2fr]">
-            <div>
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--foreground-subtle)]">
-                New business
-              </p>
-            </div>
+      {/* The form opens the visitor's email app for now. A proper "send" that
+          delivers straight to your inbox is the next piece of work. */}
+      <form
+        action={`mailto:${site.email}`}
+        method="post"
+        encType="text/plain"
+        className="max-w-2xl space-y-8"
+      >
+        <div>
+          <label htmlFor="name" className={labelClass}>
+            Your name
+          </label>
+          <input
+            id="name"
+            name="name"
+            type="text"
+            autoComplete="name"
+            required
+            className={fieldClass}
+          />
+        </div>
 
-            <div>
-              <p className="max-w-3xl font-[var(--font-space-grotesk)] text-3xl font-medium leading-tight tracking-[-0.04em] md:text-5xl">
-                For projects, collaborations and creative enquiries.
-              </p>
+        <div>
+          <label htmlFor="email" className={labelClass}>
+            Your email
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            className={fieldClass}
+          />
+        </div>
 
-              <a
-                href="mailto:hello@creativestudio.com"
-                className="mt-10 inline-block border-b border-[var(--border-strong)] pb-2 font-[var(--font-space-grotesk)] text-xl transition-colors hover:border-[var(--accent)] hover:text-[var(--accent)] md:text-2xl"
-              >
-                hello@creativestudio.com
-              </a>
-            </div>
-          </div>
-        </section>
+        <div>
+          <label htmlFor="project" className={labelClass}>
+            What do you need?
+          </label>
+          <select
+            id="project"
+            name="project"
+            defaultValue=""
+            required
+            className={fieldClass}
+          >
+            <option value="" disabled>
+              Choose a service
+            </option>
+            <option value="Design">Design</option>
+            <option value="Film">Film</option>
+            <option value="Photography">Photography</option>
+            <option value="Animation">Animation</option>
+            <option value="Web or system development">
+              Web or system development
+            </option>
+            <option value="Social media">Social media</option>
+            <option value="Something else">Something else</option>
+          </select>
+        </div>
 
-        {/* Inquiry Form */}
-        <section className="border-t border-[var(--border)] py-16 md:py-24">
-          <div className="grid gap-12 md:grid-cols-[1fr_2fr]">
-            <div>
-              <p className="text-xs uppercase tracking-[0.18em] text-[var(--foreground-subtle)]">
-                Enquiry
-              </p>
-            </div>
+        <div>
+          <label htmlFor="message" className={labelClass}>
+            About the project
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            rows={6}
+            required
+            className={`${fieldClass} resize-y`}
+          />
+        </div>
 
-            <form className="space-y-10">
-              <div>
-                <label
-                  htmlFor="name"
-                  className="mb-3 block text-xs uppercase tracking-[0.15em] text-[var(--foreground-subtle)]"
-                >
-                  Name
-                </label>
+        <button
+          type="submit"
+          className="rounded-full bg-[var(--accent)] px-8 py-4 text-lg font-semibold text-[#151210] transition-colors hover:bg-[var(--accent-dark)]"
+        >
+          Send enquiry
+        </button>
+      </form>
 
-                <input
-                  id="name"
-                  name="name"
-                  type="text"
-                  placeholder="Your name"
-                  className="w-full border-b border-[var(--border)] bg-transparent py-4 text-lg outline-none placeholder:text-[var(--foreground-subtle)] focus:border-[var(--foreground)]"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="email"
-                  className="mb-3 block text-xs uppercase tracking-[0.15em] text-[var(--foreground-subtle)]"
-                >
-                  Email
-                </label>
-
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  placeholder="Your email"
-                  className="w-full border-b border-[var(--border)] bg-transparent py-4 text-lg outline-none placeholder:text-[var(--foreground-subtle)] focus:border-[var(--foreground)]"
-                />
-              </div>
-
-              <div>
-                <label
-                  htmlFor="project"
-                  className="mb-3 block text-xs uppercase tracking-[0.15em] text-[var(--foreground-subtle)]"
-                >
-                  Project type
-                </label>
-
-                <select
-                  id="project"
-                  name="project"
-                  defaultValue=""
-                  className="w-full border-b border-[var(--border)] bg-[var(--background)] py-4 text-lg text-[var(--foreground)] outline-none focus:border-[var(--foreground)]"
-                >
-                  <option value="" disabled>
-                    Select a service
-                  </option>
-                  <option value="design">Design</option>
-                  <option value="film">Film</option>
-                  <option value="photography">Photography</option>
-                  <option value="animation">Animation</option>
-                  <option value="digital">Digital</option>
-                  <option value="social">Social</option>
-                  <option value="other">Other</option>
-                </select>
-              </div>
-
-              <div>
-                <label
-                  htmlFor="message"
-                  className="mb-3 block text-xs uppercase tracking-[0.15em] text-[var(--foreground-subtle)]"
-                >
-                  About the project
-                </label>
-
-                <textarea
-                  id="message"
-                  name="message"
-                  rows={5}
-                  placeholder="Tell us a little about the project."
-                  className="w-full resize-none border-b border-[var(--border)] bg-transparent py-4 text-lg outline-none placeholder:text-[var(--foreground-subtle)] focus:border-[var(--foreground)]"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="group flex items-center gap-4 rounded-full bg-[var(--accent)] px-7 py-4 text-sm font-medium text-black transition-transform duration-300 hover:translate-x-1"
-              >
-                Send enquiry
-                <span className="transition-transform duration-300 group-hover:translate-x-1">
-                  →
-                </span>
-              </button>
-            </form>
-          </div>
-        </section>
-
-        {/* Details */}
-        <section className="border-t border-[var(--border)] pt-10">
-          <div className="grid gap-10 text-sm md:grid-cols-3">
-            <div>
-              <p className="mb-3 text-xs uppercase tracking-[0.16em] text-[var(--foreground-subtle)]">
-                Based
-              </p>
-
-              <p>Kenya</p>
-            </div>
-
-            <div>
-              <p className="mb-3 text-xs uppercase tracking-[0.16em] text-[var(--foreground-subtle)]">
-                Email
-              </p>
-
-              <a
-                href="mailto:hello@creativestudio.com"
-                className="text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent)]"
-              >
-                hello@creativestudio.com
-              </a>
-            </div>
-
-            <div>
-              <p className="mb-3 text-xs uppercase tracking-[0.16em] text-[var(--foreground-subtle)]">
-                Work
-              </p>
-
-              <Link
-                href="/portfolio"
-                className="text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent)]"
-              >
-                View selected work →
-              </Link>
-            </div>
-          </div>
-        </section>
-      </div>
-    </main>
+      <p className="mt-16 text-lg text-[var(--foreground-muted)]">
+        Based in Kenya.{" "}
+        <Link
+          href="/portfolio"
+          className="text-[var(--accent)] underline underline-offset-4"
+        >
+          See our work
+        </Link>
+      </p>
+    </div>
   );
 }
