@@ -1,12 +1,17 @@
 import Link from "next/link";
 import { projects } from "@/data/portfolio";
+import { homeTiles } from "@/data/home";
 import { heroFallback, heroMedia } from "@/data/hero";
 import HeroBackdrop from "@/components/ui/HeroBackdrop";
 import WorkMosaic from "@/components/sections/WorkMosaic";
 import ContactCta from "@/components/sections/ContactCta";
 
 export default function Home() {
-  const featured = projects.filter((project) => project.featured);
+  // Follow the order and sizes chosen in src/data/home.ts.
+  const tiles = homeTiles.flatMap(({ slug, size }) => {
+    const project = projects.find((item) => item.slug === slug);
+    return project ? [{ project, size }] : [];
+  });
 
   return (
     <>
@@ -66,7 +71,7 @@ export default function Home() {
           </Link>
         </div>
 
-        <WorkMosaic projects={featured} />
+        <WorkMosaic tiles={tiles} />
 
         <Link
           href="/portfolio"
