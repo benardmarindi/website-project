@@ -1,17 +1,11 @@
 // Turns your raw photos and clips into web-ready files, and prints the code
 // to paste into src/data/portfolio.ts.
 //
-//   1. Put the raw files for a project in a folder for it inside its
-//      discipline's folder:
-//        media-source/photography/race-day-photography/1.jpg
-//      (the project folder's name becomes its slug)
-//   2. Run   npm run media                      (every project)
-//        or  npm run media -- race-day-photography   (just one project)
-//        or  npm run media -- photography        (every project in a discipline)
+//   1. Put the raw files for a project in  media-source/<project-slug>/
+//   2. Run   npm run media          (every project folder)
+//        or  npm run media -- my-project   (just one)
 //   3. Web-ready files appear in  public/portfolio/<project-slug>/
 //
-// The discipline folders are created for you the first time you run this.
-// Folders placed directly in media-source (like "hero") still work too.
 // Needs ffmpeg installed (https://ffmpeg.org). Nothing else.
 
 import { spawnSync } from "node:child_process";
@@ -22,18 +16,6 @@ import { fileURLToPath } from "node:url";
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const sourceRoot = path.join(root, "media-source");
 const outputRoot = path.join(root, "public", "portfolio");
-
-// Folder name -> the discipline's name in src/data/disciplines.ts.
-// Keep this list in step with that file.
-const DISCIPLINES = [
-  ["graphic-design", "Graphic Design"],
-  ["film-and-video", "Film & Video"],
-  ["photography", "Photography"],
-  ["animation-and-motion", "Animation & Motion"],
-  ["digital-experiences", "Digital Experiences"],
-  ["digital-communication", "Digital Communication"],
-];
-const disciplineFolders = new Map(DISCIPLINES);
 
 const IMAGE_TYPES = new Set([".jpg", ".jpeg", ".png", ".webp"]);
 const VIDEO_TYPES = new Set([".mp4", ".mov", ".m4v", ".webm", ".mkv"]);
@@ -143,7 +125,8 @@ function makeClip(input, output, poster) {
   ]);
 }
 
-function processProject({ slug, dir: inputDir, discipline }) {
+function processProject(slug) {
+  const inputDir = path.join(sourceRoot, slug);
   const outputDir = path.join(outputRoot, slug);
   const publicBase = `/portfolio/${slug}`;
 
@@ -155,7 +138,7 @@ function processProject({ slug, dir: inputDir, discipline }) {
 
   const entries = [];
   const used = new Set();
-  console.log(`\n${slug}${discipline ? `  (${discipline})` : ""}`);
+  console.log(`\n${slug}`);
 
   for (const name of files) {
     const extension = path.extname(name).toLowerCase();
@@ -221,60 +204,10 @@ function processProject({ slug, dir: inputDir, discipline }) {
   console.log(
     `\nPaste this into the "${slug}" entry in src/data/portfolio.ts, then write a real description in each alt:\n`,
   );
-  if (discipline) {
-    console.log(`    category: "${discipline}",`);
-  }
   console.log(`    media: [\n${entries.join("\n")}\n    ],`);
 }
 
-// Creates media-source and one folder per discipline, if they are missing.
-function ensureFolders() {
-  const created = [];
-  mkdirSync(sourceRoot, { recursive: true });
-  for (const [folder] of DISCIPLINES) {
-    const dir = path.join(sourceRoot, folder);
-    if (!existsSync(dir)) {
-      mkdirSync(dir, { recursive: true });
-      created.push(folder);
-    }
-  }
-  if (created.length > 0) {
-    console.log(`Created discipline folders in media-source: ${created.join(", ")}\n`);
-  }
-}
-
-const isDirectory = (dir) => statSync(dir).isDirectory();
-
-// Every project folder: inside a discipline folder, or (older layout) directly
-// inside media-source.
-function findProjects() {
-  const found = [];
-  for (const name of readdirSync(sourceRoot)) {
-    const dir = path.join(sourceRoot, name);
-    if (!isDirectory(dir)) continue;
-
-    if (disciplineFolders.has(name)) {
-      for (const child of readdirSync(dir)) {
-        const childDir = path.join(dir, child);
-        if (isDirectory(childDir)) {
-          found.push({
-            slug: child,
-            dir: childDir,
-            discipline: disciplineFolders.get(name),
-            folder: name,
-          });
-        }
-      }
-    } else {
-      found.push({ slug: name, dir, discipline: null, folder: null });
-    }
-  }
-  return found;
-}
-
 function main() {
-  ensureFolders();
-
   if (!hasFfmpeg()) {
     console.log(
       [
@@ -289,58 +222,45 @@ function main() {
     process.exit(1);
   }
 
-  const all = findProjects();
-
-  // Slugs become web addresses, so two projects must not share one.
-  const seen = new Set();
-  for (const project of all) {
-    if (seen.has(project.slug)) {
-      console.log(
-        `Two project folders are named "${project.slug}". Rename one: the name becomes the project's web address and its folder in public/portfolio.`,
-      );
-      process.exit(1);
-    }
-    seen.add(project.slug);
-  }
-
-  const requested = process.argv.slice(2);
-  let selected = all;
-
-  if (requested.length > 0) {
-    selected = [];
-    for (const name of requested) {
-      const matches = all.filter(
-        (project) => project.slug === name || project.folder === name,
-      );
-      if (matches.length === 0) {
-        console.log(`\n${name}\n  No project or discipline folder with that name.`);
-      }
-      selected.push(...matches);
-    }
-  }
-
-  if (selected.length === 0) {
+  if (!existsSync(sourceRoot)) {
+    mkdirSync(sourceRoot, { recursive: true });
     console.log(
       [
-        "There are no project folders yet. Make one for each project inside its discipline's folder, and put the raw photos and clips in it. For example:",
+        "Created the media-source folder.",
+        "",
+        "Make one folder inside it per project and drop your raw photos and clips in.",
+        "The folder name becomes the project's slug, for example:",
         "",
         "  media-source/",
-        "    photography/",
-        "      race-day-photography/",
-        "        1.jpg",
-        "        2.mp4",
-        "    animation-and-motion/",
-        "      nzau-animated-poster/",
-        "        clip.mov",
+        "    nzau-animated-poster/",
+        "      clip.mov",
+        "      poster.png",
         "",
-        "The folder name becomes the project's slug. Then run this again.",
+        "Then run this again.",
       ].join("\n"),
     );
     return;
   }
 
-  for (const project of selected) {
-    processProject(project);
+  const requested = process.argv.slice(2);
+  const projects =
+    requested.length > 0
+      ? requested
+      : readdirSync(sourceRoot).filter((name) =>
+          statSync(path.join(sourceRoot, name)).isDirectory(),
+        );
+
+  if (projects.length === 0) {
+    console.log("media-source is empty. Add a folder per project first.");
+    return;
+  }
+
+  for (const slug of projects) {
+    if (!existsSync(path.join(sourceRoot, slug))) {
+      console.log(`\n${slug}\n  No folder at media-source/${slug}`);
+      continue;
+    }
+    processProject(slug);
   }
 
   console.log("\nDone.");
