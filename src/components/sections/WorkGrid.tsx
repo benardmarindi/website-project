@@ -5,17 +5,17 @@ import { projects } from "@/data/portfolio";
 import { disciplines } from "@/data/disciplines";
 import type { TileSize } from "@/data/home";
 import WorkMosaic from "@/components/sections/WorkMosaic";
+import type { MosaicTile } from "@/components/sections/WorkMosaic";
 
-// Only disciplines that have at least one project, in the studio's own order,
-// with how many projects each one holds.
+// All six disciplines, in the studio's own order, with how many projects each
+// one holds. A discipline with none shows an empty "coming soon" tile.
 const categories = disciplines
   .map((discipline) => ({
     name: discipline.name as string,
     description: discipline.description as string,
     count: projects.filter((project) => project.category === discipline.name)
       .length,
-  }))
-  .filter((discipline) => discipline.count > 0);
+  }));
 
 // The filters live in the page address (/portfolio?category=Photography&q=bird)
 // so the home page can link straight to a filtered view, and the Back button
@@ -70,17 +70,36 @@ export default function WorkGrid() {
     return words.every((word) => text.includes(word));
   });
 
+  // Disciplines with no projects get an empty tile: all of them under "All",
+  // or just the chosen one. (Not while searching, which looks for real work.)
+  const emptyNames =
+    words.length > 0
+      ? []
+      : categories
+          .filter(
+            (item) =>
+              item.count === 0 && (category === "All" || category === item.name),
+          )
+          .map((item) => item.name);
+
   // A project can choose its own size (`size` in portfolio.ts). Set it on all
   // projects or none: projects without one fall into the automatic rhythm.
-  const tiles = filtered.map((project, index) => ({
-    project,
-    size:
-      project.size === "large"
-        ? ("wide" as const)
-        : project.size === "small"
-          ? ("square" as const)
-          : sizeFor(index, filtered.length),
-  }));
+  const total = filtered.length + emptyNames.length;
+  const tiles: MosaicTile[] = [
+    ...filtered.map((project, index) => ({
+      project,
+      size:
+        project.size === "large"
+          ? ("wide" as const)
+          : project.size === "small"
+            ? ("square" as const)
+            : sizeFor(index, total),
+    })),
+    ...emptyNames.map((empty, index) => ({
+      empty,
+      size: sizeFor(filtered.length + index, total),
+    })),
+  ];
 
   const activeDescription = categories.find(
     (item) => item.name === category,
@@ -138,7 +157,9 @@ export default function WorkGrid() {
                 }`}
               >
                 {item.name}
-                <span className="ml-2 opacity-60">{item.count}</span>
+                {item.count > 0 && (
+                  <span className="ml-2 opacity-60">{item.count}</span>
+                )}
               </button>
             );
           },

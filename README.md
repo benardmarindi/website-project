@@ -49,15 +49,16 @@ public/
   portfolio/                  Web-sized project photos and clips
 scripts/
   optimize-media.mjs          Makes photos and clips web-ready (npm run media)
-media-source/                 Your raw originals (stays on your computer)
+media-source/                 Your raw originals, one folder per discipline (stays on your computer)
 ```
 
 ## Adding photos and videos
 
 1. Install [ffmpeg](https://ffmpeg.org) once (`winget install ffmpeg` on Windows, `brew install ffmpeg` on Mac).
-2. Make a folder per project in `media-source/` (the folder name becomes the project's slug) and drop the raw photos and clips in. This folder stays on your computer and is never uploaded to GitHub.
-3. Run `npm run media`. It shrinks every photo and clip for the web, saves them in `public/portfolio/<slug>/`, and prints a `media: [ ... ]` snippet.
-4. Add an entry to `src/data/portfolio.ts`, paste the snippet in, and write a real description in each `alt`.
+2. Run `npm run media` once. It creates `media-source/` with a folder for each of the six disciplines (`graphic-design`, `film-and-video`, `photography`, `animation-and-motion`, `digital-experiences`, `digital-communication`).
+3. Inside the right discipline folder, make a folder for the project and drop the raw photos and clips in, for example `media-source/photography/race-day-photography/`. The project folder's name becomes its slug (its web address), so keep it lowercase with dashes and unique. This folder stays on your computer and is never uploaded to GitHub.
+4. Run `npm run media -- race-day-photography` (one project), `npm run media -- photography` (every project in a discipline) or `npm run media` (all). It shrinks every photo and clip for the web, saves them in `public/portfolio/<slug>/`, and prints a `category` line and a `media: [ ... ]` snippet.
+5. Add an entry to `src/data/portfolio.ts`, paste the snippet in, and write a real description in each `alt`.
 
 Photos become 2000px-wide JPGs. Clips become silent 720p MP4s with a still frame to show while they load. Keep clips short (under about 15 seconds): they play on a loop inside the carousel, and the carousel moves on when a clip ends. Full-length films belong on YouTube or Vimeo. Add `film: { provider: "youtube", id: "...", title: "..." }` to the project and it appears as a player on the project's own page.
 
