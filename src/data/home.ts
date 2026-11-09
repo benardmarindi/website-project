@@ -9,38 +9,39 @@
 // `slug` must match a project's slug in portfolio.ts exactly. A project that
 // is not listed here does not appear on the home page (it is still on the
 // Work page). A section with no matching projects is hidden.
+//
+// `category` is optional: the Work page filter that the section's "See all"
+// link opens. Use a discipline name from disciplines.ts.
 export type TileSize = "wide" | "square";
 
 export interface HomeSection {
   title: string;
-  /** Optional: the Work page category this section's "See all" link opens. */
   category?: string;
   tiles: { slug: string; size: TileSize }[];
 }
 
+// For now the tiles are the empty "coming soon" places. Replace each slug with
+// a real project's slug as you add projects.
 export const homeSections: HomeSection[] = [
   {
-    title: "Photography",
-    category: "Photography",
+    title: "Design and film",
     tiles: [
-      { slug: "race-day-photography", size: "wide" },
-      { slug: "pet-portraits", size: "wide" },
+      { slug: "graphic-design-soon", size: "square" },
+      { slug: "film-and-video-soon", size: "square" },
     ],
   },
   {
-    title: "3D and motion",
-    category: "Animation & Motion",
+    title: "Photography and motion",
     tiles: [
-      { slug: "bird-render", size: "wide" },
-      { slug: "subaru-fr", size: "square" },
-      { slug: "desk-light", size: "square" },
+      { slug: "photography-soon", size: "square" },
+      { slug: "animation-and-motion-soon", size: "square" },
     ],
   },
   {
-    title: "Design and animation",
+    title: "Digital",
     tiles: [
-      { slug: "moto-4-campaign", size: "square" },
-      { slug: "nzau-animated-poster", size: "square" },
+      { slug: "digital-experiences-soon", size: "square" },
+      { slug: "digital-communication-soon", size: "square" },
     ],
   },
 ];

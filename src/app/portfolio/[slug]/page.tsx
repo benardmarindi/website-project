@@ -115,8 +115,32 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
     return notFound();
   }
 
+  if (project.comingSoon) {
+    return (
+      <>
+        <div className="container pb-24 pt-36 md:pb-32 md:pt-44">
+          <Link
+            href="/portfolio"
+            className="text-base text-[var(--foreground-muted)] transition-colors hover:text-[var(--accent)]"
+          >
+            ← All work
+          </Link>
+          <h1 className="mt-8 text-5xl leading-[1.04] md:text-7xl">
+            {project.title}
+          </h1>
+          <p className="mt-8 text-xl text-[var(--foreground-muted)]">
+            Work in this area is coming soon.
+          </p>
+        </div>
+        <ContactCta />
+      </>
+    );
+  }
+
   // Related work: the same discipline first, then anything else, up to three.
-  const others = projects.filter((item) => item.slug !== project.slug);
+  const others = projects.filter(
+    (item) => item.slug !== project.slug && !item.comingSoon,
+  );
   const sameDiscipline = others.filter(
     (item) => item.category === project.category,
   );

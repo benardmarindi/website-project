@@ -6,13 +6,16 @@ import { disciplines } from "@/data/disciplines";
 import type { TileSize } from "@/data/home";
 import WorkMosaic from "@/components/sections/WorkMosaic";
 
+// Real projects only: the empty "coming soon" tiles are not searched or counted.
+const live = projects.filter((project) => !project.comingSoon);
+
 // Only disciplines that have at least one project, in the studio's own order,
 // with how many projects each one holds.
 const categories = disciplines
   .map((discipline) => ({
     name: discipline.name as string,
     description: discipline.description as string,
-    count: projects.filter((project) => project.category === discipline.name)
+    count: live.filter((project) => project.category === discipline.name)
       .length,
   }))
   .filter((discipline) => discipline.count > 0);
@@ -57,7 +60,7 @@ export default function WorkGrid() {
   const query = searchParams.get("q") ?? "";
 
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
-  const filtered = projects.filter((project) => {
+  const filtered = live.filter((project) => {
     if (category !== "All" && project.category !== category) return false;
     const text = [
       project.title,
@@ -100,6 +103,18 @@ export default function WorkGrid() {
 
   const filtering = category !== "All" || query.trim() !== "";
 
+  // Nothing added yet: show the empty tiles that hold the places.
+  if (live.length === 0) {
+    return (
+      <WorkMosaic
+        tiles={projects.map((project, index) => ({
+          project,
+          size: sizeFor(index, projects.length),
+        }))}
+      />
+    );
+  }
+
   return (
     <div>
       <div className="mb-8">
@@ -121,7 +136,7 @@ export default function WorkGrid() {
         aria-label="Filter projects by type"
         className="mb-6 flex flex-wrap gap-3"
       >
-        {[{ name: "All", count: projects.length }, ...categories].map(
+        {[{ name: "All", count: live.length }, ...categories].map(
           (item) => {
             const active = category === item.name;
 
@@ -156,8 +171,8 @@ export default function WorkGrid() {
         aria-live="polite"
       >
         {filtering
-          ? `${filtered.length} of ${projects.length} projects`
-          : `${projects.length} projects`}
+          ? `${filtered.length} of ${live.length} projects`
+          : `${live.length} projects`}
         {filtering && (
           <button
             type="button"

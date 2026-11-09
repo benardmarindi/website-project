@@ -63,187 +63,83 @@ export interface Project {
   cover?: ProjectMedia;
   /** The project's page, section by section. Leave out to show the carousel and the details only. */
   sections?: ProjectSection[];
+  /** An empty tile that holds a place until the real project is added. It has no page content and is not clickable. */
+  comingSoon?: boolean;
 }
 
-// To add a project, run `npm run media` on its photos and clips (see README),
-// then paste the snippet it prints into the `media` list of a new entry below.
+// How to add a project:
+//   1. Put its photos and clips in media-source/<discipline>/<project-name>/
+//   2. Run `npm run media` (see the README) and paste the snippet it prints
+//      into the `media` list of a new entry below.
+//   3. Place it on the home page in src/data/home.ts.
+// The empty "coming soon" tiles below hold the places until you do. Delete a
+// tile once real projects exist; the Work page hides them as soon as there is
+// at least one real project.
 export const projects: Project[] = [
   {
-    slug: "race-day-photography",
-    title: "Race day photography",
-    category: "Photography",
-    description: "Action and trail photography from race day.",
-    year: 2026,
-    featured: true,
-    transition: "slide",
-    media: [
-         {
-        type: "image",
-        src: "/portfolio/visual-identity.jpg",
-        alt: "A quiet dirt lane lined with green hedges",
-      },
-      {
-        type: "image",
-        src: "/portfolio/rider-mud.jpg",
-        alt: "A rider kicking up mud on a dirt track",
-      },
-      {
-        type: "image",
-        src: "/portfolio/trail-bridge.jpg",
-        alt: "A rough wooden bridge over a muddy trail",
-      },
-   
-    ],
-  },
-     
-  {
-    slug: "nzau-animated-poster",
-    title: "Animated Poster",
-    category: "Animation & Motion",
-    description: "A poster brought to life with motion.",
-    year: 2026,
-    featured: true,
-    transition: "fade",
-    media: [
-      {
-        type: "video",
-        src: "/portfolio/nzau-animated-poster/nzau-animated-poster-1.mp4",
-        poster: "/portfolio/nzau-animated-poster/nzau-animated-poster-1-poster.jpg",
-        alt: "The Nzau poster animating in a loop",
-      },
-    ],
-  },
-   {
-    slug: "bird-render",
-    title: "3D Renders",
-    category: "Animation & Motion",
-    description: "One line about it.",
-    year: 2026,
-    featured: true,
-    transition: "fade",
-    media: [
-      {
-        type: "video",
-        src: "/portfolio/bird-render/7.mp4",
-        poster: "/portfolio/bird-render/7-poster.jpg",
-        alt: "A 3D render of a bird in flight",
-      },
-        {
-        type: "image",
-        src: "/portfolio/subaru-fr/13.jpg",
-        alt: "TODO: describe this photo",
-      },
-       {
-        type: "image",
-        src: "/portfolio/desk-light/15.jpg",
-        alt: "TODO: describe this photo",
-      },
-      
-    ],
-  },
-  {
-    slug: "pet-portraits",
-    title: "Pet Portraits",
-    category: "Photography",
-    description: "Natural-light portraits of dogs and cats.",
-    year: 2026,
-    featured: true,
-    transition: "wipe",
-    media: [
-      {
-        type: "image",
-        src: "/portfolio/dog-moss.jpg",
-        alt: "A brown and white dog resting on mossy ground",
-      },
-      {
-        type: "image",
-        src: "/portfolio/cat-up.jpg",
-        alt: "A fluffy white cat looking up",
-      },
-    ],
-  },
-
-    
-  {
-    slug: "desk-light",
-    title: "Desk light",
-    category: "Animation & Motion",
-    description: "One line about it.",
-    year: 2026,
-    featured: true,
-    transition: "fade",
-    media: [
-  
-    ],
-  },
-  {
-    slug: "subaru-fr",
-    title: "Subaru FR",
-    category: "Animation & Motion",
-    description: "One line about it.",
-    year: 2026,
-    featured: true,
-    transition: "slide",
-    media: [    
-      {
-        type: "image",
-        src: "/portfolio/subaru-fr/10.jpg",
-        alt: "TODO: describe this photo",
-      },
-      {
-        type: "image",
-        src: "/portfolio/subaru-fr/11.jpg",
-        alt: "TODO: describe this photo",
-      },
-      {
-        type: "image",
-        src: "/portfolio/subaru-fr/12.jpg",
-        alt: "TODO: describe this photo",
-      },
-      {
-        type: "image",
-        src: "/portfolio/subaru-fr/13.jpg",
-        alt: "TODO: describe this photo",
-      },
-      {
-        type: "image",
-        src: "/portfolio/subaru-fr/14.jpg",
-        alt: "TODO: describe this photo",
-      },
-      // paste block contents
-    ],
-  },
-  {
-    slug: "moto-4-campaign",
-    title: "Posters",
+    slug: "graphic-design-soon",
+    title: "Graphic Design",
     category: "Graphic Design",
-    description: "Event poster and campaign visuals for a motocross race.",
+    description: "Coming soon.",
     year: 2026,
-    featured: true,
+    featured: false,
     transition: "fade",
-    media: [
-      {
-        type: "image",
-        src: "/portfolio/posters/kigen-mx5-copy-jpg.jpg",
-        alt: "TODO: describe this photo",
-      },
-       {
-        type: "image",
-        src: "/portfolio/posters/amir-moto-5-redone-jpg.jpg",
-        alt: "TODO: describe this photo",
-      },
-      
-      {
-        type: "image",
-        src: "/portfolio/posters/moto-5-jpg.jpg",
-        alt: "TODO: describe this photo",
-      },
-      {
-        type: "image",
-        src: "/portfolio/moto4-poster.jpg",
-        alt: "Moto 4 event poster with two riders",
-      },
-      
-    ],
+    media: [],
+    comingSoon: true,
+  },
+  {
+    slug: "film-and-video-soon",
+    title: "Film & Video",
+    category: "Film & Video",
+    description: "Coming soon.",
+    year: 2026,
+    featured: false,
+    transition: "fade",
+    media: [],
+    comingSoon: true,
+  },
+  {
+    slug: "photography-soon",
+    title: "Photography",
+    category: "Photography",
+    description: "Coming soon.",
+    year: 2026,
+    featured: false,
+    transition: "fade",
+    media: [],
+    comingSoon: true,
+  },
+  {
+    slug: "animation-and-motion-soon",
+    title: "Animation & Motion",
+    category: "Animation & Motion",
+    description: "Coming soon.",
+    year: 2026,
+    featured: false,
+    transition: "fade",
+    media: [],
+    comingSoon: true,
+  },
+  {
+    slug: "digital-experiences-soon",
+    title: "Digital Experiences",
+    category: "Digital Experiences",
+    description: "Coming soon.",
+    year: 2026,
+    featured: false,
+    transition: "fade",
+    media: [],
+    comingSoon: true,
+  },
+  {
+    slug: "digital-communication-soon",
+    title: "Digital Communication",
+    category: "Digital Communication",
+    description: "Coming soon.",
+    year: 2026,
+    featured: false,
+    transition: "fade",
+    media: [],
+    comingSoon: true,
   },
 ];
